@@ -1,0 +1,332 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #F5F7FA;
+  --color-foreground: #0F172A;
+  --color-primary: #FFFFFF;
+  --color-primary-light: #F0F3F8;
+  --color-secondary: #E2E8F0;
+  --color-accent: #DC2626;
+  --color-accent-hover: #B91C1C;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-card: rgba(255,255,255,0.35);
+  --color-border: rgba(0,0,0,0.04);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* { scroll-behavior: smooth; }
+
+body {
+  background: #F5F7FA;
+  color: #0F172A;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+::selection { background: rgba(220,38,38,0.15); color: #0F172A; }
+
+/* ========== Task 1: Apple-level Glassmorphism ========== */
+
+/* Glass noise texture via SVG feTurbulence data-uri */
+.glass-noise {
+  position: relative;
+}
+.glass-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ===== True Apple Glass ===== */
+.glass-card {
+  position: relative;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.58) 0%,
+    rgba(255,255,255,0.35) 40%,
+    rgba(255,255,255,0.25) 100%);
+  backdrop-filter: blur(30px) saturate(1.8) brightness(1.05);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8) brightness(1.05);
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 22px;
+  box-shadow:
+    /* top inner highlight — edge light refraction */
+    inset 0 1px 0 rgba(255,255,255,0.8),
+    /* bottom inner shadow — depth */
+    inset 0 -1px 0 rgba(0,0,0,0.03),
+    /* tight outer shadow — grounding */
+    0 1px 3px rgba(0,0,0,0.04),
+    /* outer glow — soft spread */
+    0 8px 32px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.glass-card-hover {
+  transition: all 0.7s cubic-bezier(0.22,1,0.36,1);
+}
+.glass-card-hover:hover {
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.75) 0%,
+    rgba(255,255,255,0.45) 40%,
+    rgba(255,255,255,0.32) 100%);
+  border-color: rgba(255,255,255,0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(0,0,0,0.04),
+    0 2px 6px rgba(0,0,0,0.05),
+    0 12px 48px rgba(0,0,0,0.1),
+    0 0 0 1px rgba(255,255,255,0.6),
+    0 0 80px rgba(220,38,38,0.04);
+  transform: translateY(-6px);
+}
+
+/* ===== Header (Apple store level) ===== */
+.navbar-scrolled {
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.7) 0%,
+    rgba(255,255,255,0.5) 50%,
+    rgba(255,255,255,0.35) 100%);
+  backdrop-filter: blur(40px) saturate(2) brightness(1.08);
+  -webkit-backdrop-filter: blur(40px) saturate(2) brightness(1.08);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+/* ===== Dropdown Glass ===== */
+.dropdown-menu {
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.72) 0%,
+    rgba(255,255,255,0.45) 50%,
+    rgba(255,255,255,0.28) 100%);
+  backdrop-filter: blur(32px) saturate(1.9) brightness(1.06);
+  -webkit-backdrop-filter: blur(32px) saturate(1.9) brightness(1.06);
+  border: 1px solid rgba(255,255,255,0.55);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.75),
+    0 8px 40px rgba(0,0,0,0.1);
+  transform-origin: top center;
+  animation: dropdownIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: scale(0.92) translateY(-16px); filter: blur(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+
+/* ========== Dynamic Ambient Background ========== */
+.bg-ambient {
+  position: relative;
+  background:
+    radial-gradient(ellipse 120% 80% at 85% 15%, rgba(191,219,254,0.55) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 60% at 15% 80%, rgba(226,232,240,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 55% at 55% 45%, rgba(220,38,38,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 75% 60%, rgba(224,242,254,0.3) 0%, transparent 45%),
+    linear-gradient(180deg, #F8FAFC 0%, #EEF2F6 40%, #F5F7FA 70%, #FFFFFF 100%);
+}
+.bg-ambient::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: ambientDrift 18s ease-in-out infinite alternate;
+  background:
+    radial-gradient(circle 500px at 75% 25%, rgba(191,219,254,0.4), transparent),
+    radial-gradient(circle 400px at 25% 70%, rgba(226,232,240,0.35), transparent),
+    radial-gradient(circle 300px at 55% 40%, rgba(220,38,38,0.035), transparent),
+    radial-gradient(circle 350px at 80% 60%, rgba(224,242,254,0.25), transparent);
+}
+@keyframes ambientDrift {
+  0% { transform: translate(0,0) scale(1); opacity: 1; }
+  33% { transform: translate(4%, 2%) scale(1.06); opacity: 0.85; }
+  66% { transform: translate(-2%, -3%) scale(0.94); opacity: 0.95; }
+  100% { transform: translate(-3%, 1%) scale(1.03); opacity: 0.9; }
+}
+
+/* Hero section extra ambient light */
+.section-hero { position: relative; background: transparent; }
+.section-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: heroGlow 16s ease-in-out infinite alternate;
+  background:
+    radial-gradient(ellipse 1000px 800px at 70% 30%, rgba(219,234,254,0.6), transparent 60%),
+    radial-gradient(ellipse 600px 500px at 30% 60%, rgba(226,232,240,0.5), transparent 60%),
+    radial-gradient(ellipse 500px 400px at 50% 50%, rgba(220,38,38,0.04), transparent 55%);
+}
+@keyframes heroGlow {
+  0% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0.75; transform: scale(0.97); }
+}
+
+/* Section backgrounds */
+.section-alt { background: #FFFFFF; }
+.section-mid {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F0F3F8 50%, #FFFFFF 100%);
+}
+
+/* ========== Button Sheen Animation ========== */
+.btn-primary {
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.3) 40%,
+    rgba(255,255,255,0.5) 50%,
+    rgba(255,255,255,0.3) 60%,
+    transparent 100%);
+  transform: skewX(-25deg);
+  transition: left 0.6s cubic-bezier(0.22,1,0.36,1);
+  pointer-events: none;
+}
+.btn-primary:hover::after {
+  left: 120%;
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 0 50px rgba(220,38,38,0.25), 0 8px 30px rgba(220,38,38,0.15);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  border-radius: 16px;
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.06);
+  transition: all 0.45s cubic-bezier(0.22,1,0.36,1);
+}
+.btn-secondary:hover {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.12);
+}
+
+/* ===== Inputs ===== */
+input[type="text"],input[type="email"],input[type="tel"],textarea,select {
+  border-radius: 14px !important;
+  background: rgba(255,255,255,0.55) !important;
+  border: 1px solid rgba(0,0,0,0.05) !important;
+  color: #0F172A !important;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s;
+}
+input:focus,textarea:focus,select:focus {
+  border-color: rgba(220,38,38,0.3) !important;
+  box-shadow: 0 0 0 4px rgba(220,38,38,0.05) !important;
+  background: rgba(255,255,255,0.75) !important;
+}
+input::placeholder,textarea::placeholder { color: #94A3B8 !important; }
+
+/* ===== Product Card (display cabinet) ===== */
+.product-card-image {
+  transition: transform 0.9s cubic-bezier(0.22,1,0.36,1);
+}
+.group:hover .product-card-image { transform: scale(1.06); }
+
+.product-card-shine {
+  position: relative; overflow: hidden;
+  background: linear-gradient(180deg, #F8FAFC 0%, #EEF2F6 60%, #E2E8F0 100%);
+}
+.product-card-shine::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 35%, rgba(255,255,255,0.5) 55%, transparent 75%);
+  opacity: 0; transition: opacity 0.7s;
+  pointer-events: none; z-index: 1;
+}
+.group:hover .product-card-shine::after { opacity: 1; }
+
+.product-card-shine::before {
+  content: ''; position: absolute; bottom: 0; left: 5%; width: 90%; height: 35%;
+  background: linear-gradient(to top, rgba(0,0,0,0.04), transparent);
+  opacity: 0; transition: opacity 0.7s;
+  pointer-events: none; z-index: 0;
+}
+.group:hover .product-card-shine::before { opacity: 1; }
+
+/* light sweep */
+@keyframes lightSweep {
+  0% { left: -100%; } 100% { left: 150%; }
+}
+.product-card-shine .light-sweep {
+  position: absolute; top: 0; left: -100%; width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none; z-index: 2;
+  opacity: 0; transition: opacity 0.3s;
+}
+.group:hover .product-card-shine .light-sweep {
+  opacity: 1;
+  animation: lightSweep 1s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+
+/* ===== Video Glow ===== */
+.video-glow {
+  filter: drop-shadow(0 0 40px rgba(191,219,254,0.4)) drop-shadow(0 0 80px rgba(191,219,254,0.15));
+}
+
+/* ===== Floating, Page Transitions ===== */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter { animation: pageEnter 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.9s cubic-bezier(0.22,1,0.36,1) forwards; }
+
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+}
+.animate-pulse-dot { animation: pulse-dot 2.5s ease-in-out infinite; }
+
+/* ========== Product Reel rotating conic ring ========== */
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========== Fallback sway (gentle, not full rotation) ========== */
+@keyframes gentleSway {
+  0% { transform: perspective(800px) rotateY(-6deg); }
+  100% { transform: perspective(800px) rotateY(6deg); }
+}
+
+/* ========== prefers-reduced-motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-float, .bg-ambient::before, .section-hero::before {
+    animation: none !important;
+  }
+}

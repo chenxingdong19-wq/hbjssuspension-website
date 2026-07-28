@@ -1,0 +1,49 @@
+{
+  "name": "Hebei Jingshun Auto Parts Co., Ltd.",
+  "nameZh": "河北晶顺汽车配件有限公司",
+  "brand": "JS Suspension",
+  "tagline": "Precision Suspension Components for Global Automotive Systems",
+  "description": "Hebei Jingshun Auto Parts Co., Ltd. is a professional manufacturer specializing in automotive suspension components and chassis systems. With over 12 years of manufacturing experience, we provide OEM and ODM services to importers, distributors, and wholesalers worldwide.",
+  "founded": 2012,
+  "website": "https://hbjssuspension.com",
+  "industry": "Automotive Suspension System Manufacturer",
+  "businessType": "B2B Automotive Parts Manufacturer",
+  "targetCustomers": [
+    "Auto Parts Importers",
+    "Distributors",
+    "Wholesalers",
+    "Repair Networks",
+    "OEM Aftermarket Buyers"
+  ],
+  "contact": {
+    "address": {
+      "full": "Niujiazhai, Changzhuang Township, Wei County, Xingtai City, Hebei Province, China",
+      "village": "Niujiazhai",
+      "township": "Changzhuang Township",
+      "county": "Wei County",
+      "city": "Xingtai City",
+      "province": "Hebei Province",
+      "country": "China"
+    },
+    "email": "410545458@qq.com",
+    "phones": ["+86 15116906140"],
+    "contactPerson": "Chunyang Sun",
+    "workingHours": {
+      "days": "Mon-Sat",
+      "hours": "8:30 AM - 6:00 PM",
+      "timezone": "UTC+8"
+    }
+  },
+  "statistics": [
+    { "label": "Years Manufacturing Experience", "value": "12+" },
+    { "label": "OEM / ODM Capability", "value": "OEM" },
+    { "label": "Product Models", "value": "500+" },
+    { "label": "Export Service", "value": "Global" }
+  ],
+  "social": {
+    "whatsapp": "+8615116906140",
+    "wechat": "HBJSuspension",
+    "facebook": "https://www.facebook.com/?locale=zh_CN",
+    "linkedin": ""
+  }
+}

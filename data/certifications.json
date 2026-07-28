@@ -1,0 +1,14 @@
+[
+  {
+    "id": "cert-quality",
+    "name": "Certified Quality Systems",
+    "image": "/assets/certificates/01.webp",
+    "description": "Our manufacturing processes align with internationally recognized quality management frameworks, ensuring consistent product quality and customer satisfaction."
+  },
+  {
+    "id": "cert-automotive",
+    "name": "Automotive Manufacturing Standards",
+    "image": "/assets/certificates/02.webp",
+    "description": "Production and quality control systems meet rigorous automotive supply chain requirements for precision and reliability."
+  }
+]

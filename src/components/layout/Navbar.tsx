@@ -1,0 +1,185 @@
+"use client";
+
+import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { getCategories, getCompany } from "@/lib/data";
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/products", label: "Products" },
+  { href: "/manufacturing", label: "Manufacturing" },
+  { href: "/quality", label: "Quality" },
+  { href: "/contact", label: "Contact" },
+];
+
+const SCROLL_THRESHOLD = 20;
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
+  const pathname = usePathname();
+  const categories = getCategories();
+  const company = getCompany();
+  const lastScrollY = useRef(0);
+  const isAnimating = useRef(false);
+
+  const onScroll = useCallback(() => {
+    const currentY = window.scrollY;
+    setScrolled(currentY > SCROLL_THRESHOLD);
+
+    if (currentY <= SCROLL_THRESHOLD) {
+      setHidden(false);
+      lastScrollY.current = currentY;
+      return;
+    }
+
+    if (isAnimating.current) return;
+
+    const delta = currentY - lastScrollY.current;
+    if (delta > 10) {
+      setHidden(true);
+    } else if (delta < -5) {
+      setHidden(false);
+    }
+
+    lastScrollY.current = currentY;
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [onScroll]);
+
+  useEffect(() => {
+    isAnimating.current = true;
+    const timer = setTimeout(() => {
+      isAnimating.current = false;
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [hidden]);
+
+  return (
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-600 ease-in-out ${
+        hidden ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
+      } ${
+        scrolled
+          ? "navbar-scrolled border-b border-black/[0.06] shadow-sm"
+          : "bg-transparent"
+      }`}
+    >
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          <Link href="/" className="flex items-center group flex-shrink-0">
+            <img
+              src="/assets/brand/logo.png"
+              alt={`${company.brand} Logo`}
+              className="h-10 lg:h-12 w-auto object-contain"
+            />
+          </Link>
+
+          <div className="hidden lg:flex items-center gap-1">
+            {navLinks.map((link) =>
+              link.label === "Products" ? (
+                <div
+                  key={link.href}
+                  className="relative"
+                  onMouseEnter={() => setProductsOpen(true)}
+                  onMouseLeave={() => setProductsOpen(false)}
+                >
+                  <Link
+                    href={link.href}
+                    className={`px-3 py-2 text-sm font-medium transition-colors rounded-md flex items-center gap-1 ${
+                      pathname === link.href || pathname.startsWith("/products")
+                        ? "text-accent"
+                        : "text-[#475569] hover:text-[#0F172A]"
+                    }`}
+                  >
+                    {link.label}
+                    <ChevronDown size={14} />
+                  </Link>
+                  {productsOpen && (
+                    <div className="absolute top-full left-0 mt-1 w-64 dropdown-menu py-2">
+                      <Link
+                        href="/products"
+                        className="block px-4 py-2.5 text-sm text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03] transition-colors"
+                      >
+                        All Products
+                      </Link>
+                      {categories.map((cat) => (
+                        <Link
+                          key={cat.slug}
+                          href={`/products?category=${cat.slug}`}
+                          className="block px-4 py-2.5 text-sm text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03] transition-colors"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-3 py-2 text-sm font-medium transition-colors rounded-md ${
+                    pathname === link.href
+                      ? "text-accent"
+                      : "text-[#475569] hover:text-[#0F172A]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
+            <Link
+              href="/contact"
+              className="ml-4 px-5 py-2.5 bg-accent text-white text-sm font-medium btn-primary shadow-lg shadow-red-200"
+            >
+              Request Quote
+            </Link>
+          </div>
+
+          <button
+            className="lg:hidden p-2 text-[#475569] hover:text-[#0F172A] transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {mobileOpen && (
+          <div className="lg:hidden border-t border-gray-200 py-4 space-y-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block px-4 py-3 text-base font-medium transition-colors rounded-md ${
+                    pathname === link.href || (link.href === "/products" && pathname.startsWith("/products"))
+                      ? "text-accent bg-red-50"
+                      : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="block mx-4 mt-3 px-5 py-3 bg-accent text-white text-center text-sm font-medium btn-primary"
+            >
+              Request Quote
+            </Link>
+          </div>
+        )}
+      </nav>
+    </header>
+  );
+}
