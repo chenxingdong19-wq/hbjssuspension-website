@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProductById, getProducts } from "@/lib/data";
+import { scanProductGallery } from "@/lib/gallery";
 import ProductDetailClient from "./ProductDetailClient";
 
 interface Props {
@@ -32,6 +33,13 @@ export default async function ProductDetailPage({ params }: Props) {
   const { id } = await params;
   const product = getProductById(id);
   if (!product) notFound();
+
+  // Auto-scan disk for all images in the product directory
+  const diskImages = scanProductGallery(product.categorySlug, product.id);
+  if (diskImages.length > 0) {
+    product.image = diskImages[0];
+    product.gallery = diskImages;
+  }
 
   return <ProductDetailClient product={product} />;
 }

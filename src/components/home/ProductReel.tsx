@@ -68,33 +68,6 @@ export default function ProductReel() {
           </div>
         )}
       </div>
-
-      {/* ===== ISO Badge ===== */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: [0, -5, 0] }}
-        transition={{
-          opacity: { delay: 0.9, duration: 0.5 },
-          y: { delay: 1.2, duration: 3.5, repeat: Infinity, ease: "easeInOut" },
-        }}
-        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20"
-      >
-        <div
-          className="flex items-center gap-2.5 px-5 py-2.5 rounded-full antialiased"
-          style={{
-            background: "rgba(255,255,255,0.55)",
-            backdropFilter: "blur(20px) saturate(1.6)",
-            WebkitBackdropFilter: "blur(20px) saturate(1.6)",
-            border: "1px solid rgba(255,255,255,0.5)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 12px rgba(0,0,0,0.06)",
-          }}
-        >
-          <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)] animate-pulse-dot" />
-          <span className="text-[11px] font-medium tracking-normal text-slate-500 whitespace-nowrap">
-            ISO 9001<span className="text-slate-300 mx-1">·</span>IATF 16949 Certified
-          </span>
-        </div>
-      </motion.div>
     </motion.div>
   );
 }

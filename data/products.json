@@ -5,10 +5,11 @@
     "category": "Control Arm Assembly",
     "categorySlug": "control-arms",
     "subcategorySlug": "front-lower-control-arm",
-    "image": "/assets/products/control-arm/001.webp",
+    "image": "/assets/products/control-arms/control-arm-001/01.webp",
     "gallery": [
-      "/assets/products/control-arm/001.webp",
-      "/assets/products/control-arm/002.webp"
+      "/assets/products/control-arms/control-arm-001/01.webp",
+      "/assets/products/control-arms/control-arm-001/02.webp",
+      "/assets/products/control-arms/control-arm-001/03.webp"
     ],
     "oem": "54500-2S000",
     "vehicle": "Hyundai Sonata 2011-2014, Kia Optima 2011-2015",
@@ -25,9 +26,9 @@
     "category": "Control Arm Assembly",
     "categorySlug": "control-arms",
     "subcategorySlug": "rear-upper-control-arm",
-    "image": "/assets/products/control-arm/002.webp",
+    "image": "/assets/products/control-arms/control-arm-002/01.webp",
     "gallery": [
-      "/assets/products/control-arm/002.webp"
+      "/assets/products/control-arms/control-arm-002/01.webp"
     ],
     "oem": "55130-2S000",
     "vehicle": "Hyundai Tucson 2010-2015, Kia Sportage 2011-2016",
@@ -44,9 +45,9 @@
     "category": "Control Arm Assembly",
     "categorySlug": "control-arms",
     "subcategorySlug": "front-lower-control-arm",
-    "image": "/assets/products/control-arm/003.webp",
+    "image": "/assets/products/control-arms/control-arm-003/01.webp",
     "gallery": [
-      "/assets/products/control-arm/003.webp"
+      "/assets/products/control-arms/control-arm-003/01.webp"
     ],
     "oem": "54501-2S000",
     "vehicle": "Hyundai Elantra 2011-2015",
@@ -63,10 +64,9 @@
     "category": "Ball Joint",
     "categorySlug": "ball-joints",
     "subcategorySlug": "front-lower-ball-joint",
-    "image": "/assets/products/ball-joint/01.webp",
+    "image": "/assets/products/ball-joints/ball-joint-001/01.webp",
     "gallery": [
-      "/assets/products/ball-joint/01.webp",
-      "/assets/products/ball-joint/02.webp"
+      "/assets/products/ball-joints/ball-joint-001/01.webp"
     ],
     "oem": "K750177",
     "vehicle": "Toyota Camry 2007-2011, RAV4 2006-2012",
@@ -83,9 +83,9 @@
     "category": "Ball Joint",
     "categorySlug": "ball-joints",
     "subcategorySlug": "front-upper-ball-joint",
-    "image": "/assets/products/ball-joint/02.webp",
+    "image": "/assets/products/ball-joints/ball-joint-002/01.webp",
     "gallery": [
-      "/assets/products/ball-joint/02.webp"
+      "/assets/products/ball-joints/ball-joint-002/01.webp"
     ],
     "oem": "K750178",
     "vehicle": "Honda Accord 2008-2012, Civic 2006-2011",
@@ -102,11 +102,10 @@
     "category": "Rubber Bushings",
     "categorySlug": "bushings",
     "subcategorySlug": "control-arm-bushing",
-    "image": "/assets/products/bushing/01.webp",
+    "image": "/assets/products/bushings/bushing-001/01.webp",
     "gallery": [
-      "/assets/products/bushing/01.webp",
-      "/assets/products/bushing/02.webp",
-      "/assets/products/bushing/03.webp"
+      "/assets/products/bushings/bushing-001/01.webp",
+      "/assets/products/bushings/bushing-001/03.webp"
     ],
     "oem": "54584-2S000",
     "vehicle": "Hyundai/Kia Multi-Model",
@@ -123,9 +122,9 @@
     "category": "Rubber Bushings",
     "categorySlug": "bushings",
     "subcategorySlug": "stabilizer-bar-bushing",
-    "image": "/assets/products/bushing/02.webp",
+    "image": "/assets/products/bushings/bushing-002/01.webp",
     "gallery": [
-      "/assets/products/bushing/02.webp"
+      "/assets/products/bushings/bushing-002/01.webp"
     ],
     "oem": "54813-2S000",
     "vehicle": "Universal Application",
@@ -142,10 +141,9 @@
     "category": "Suspension Components",
     "categorySlug": "links-rods",
     "subcategorySlug": "tie-rod-end",
-    "image": "/assets/products/other/001.webp",
+    "image": "/assets/products/links-rods/other-001/01.svg",
     "gallery": [
-      "/assets/products/other/001.webp",
-      "/assets/products/other/002.webp"
+      "/assets/products/links-rods/other-001/01.svg"
     ],
     "oem": "56820-2S000",
     "vehicle": "Hyundai/Kia Multi-Model",
@@ -162,9 +160,9 @@
     "category": "Suspension Components",
     "categorySlug": "links-rods",
     "subcategorySlug": "stabilizer-link",
-    "image": "/assets/products/other/002.webp",
+    "image": "/assets/products/links-rods/other-002/01.webp",
     "gallery": [
-      "/assets/products/other/002.webp"
+      "/assets/products/links-rods/other-002/01.webp"
     ],
     "oem": "54830-2S000",
     "vehicle": "Hyundai Sonata 2011-2014",
@@ -181,9 +179,9 @@
     "category": "Suspension Components",
     "categorySlug": "links-rods",
     "subcategorySlug": "rack-end",
-    "image": "/assets/products/other/001.webp",
+    "image": "/assets/products/links-rods/other-003/01.webp",
     "gallery": [
-      "/assets/products/other/001.webp"
+      "/assets/products/links-rods/other-003/01.webp"
     ],
     "oem": "57724-2S000",
     "vehicle": "Hyundai/Kia Multi-Model",
