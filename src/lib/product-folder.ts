@@ -2,9 +2,7 @@ import fs from "fs";
 import path from "path";
 
 /**
- * Server-only: auto-scan disk for product gallery images.
- * Directory: public/assets/products/{categorySlug}/{productId}/
- * Returns sorted array like: ["/assets/products/control-arms/control-arm-001/01.webp", ...]
+ * Scan product directory for all image files.
  */
 export function scanProductGallery(categorySlug: string, productId: string): string[] {
   const dirPath = path.join(process.cwd(), "public/assets/products", categorySlug, productId);
@@ -17,5 +15,19 @@ export function scanProductGallery(categorySlug: string, productId: string): str
     return files.map((f) => `/assets/products/${categorySlug}/${productId}/${f}`);
   } catch {
     return [];
+  }
+}
+
+/**
+ * Read product info.json from disk.
+ */
+export function readProductInfo(categorySlug: string, productId: string): Record<string, unknown> | null {
+  const infoPath = path.join(process.cwd(), "public/assets/products", categorySlug, productId, "info.json");
+  try {
+    if (!fs.existsSync(infoPath)) return null;
+    const raw = fs.readFileSync(infoPath, "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
   }
 }
