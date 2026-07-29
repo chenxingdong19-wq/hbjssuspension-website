@@ -41,3 +41,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /hbjssuspension-*.zip  
+/products-images-template.zip

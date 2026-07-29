@@ -26,6 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <head>
+        <meta name="facebook-domain-verification" content="jo2oj87qfpjj8q7vkxdyrnbe1f9haw" />
         <Script id="schema-org" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context":"https://schema.org","@type":"Organization",name:company.name,alternateName:company.brand,url:baseUrl,description:company.description,address:{"@type":"PostalAddress",addressLocality:`${company.contact.address.county}, ${company.contact.address.city}`,addressRegion:company.contact.address.province,addressCountry:"CN"},contactPoint:{"@type":"ContactPoint",telephone:company.contact.phones[0],contactType:"sales",email:company.contact.email},sameAs:[] }) }} />
       </head>
       <body className="min-h-full flex flex-col bg-ambient text-[#0F172A] antialiased">
