@@ -1,71 +1,13 @@
 [
   {
-    "id": "control-arms",
-    "name": "Control Arms",
-    "slug": "control-arms",
-    "description": "Precision-engineered control arm assemblies for a wide range of vehicle makes and models.",
-    "icon": "Wrench",
-    "children": [
-      { "id": "front-lower-control-arm", "name": "Front Lower Control Arms", "slug": "front-lower-control-arm" },
-      { "id": "front-upper-control-arm", "name": "Front Upper Control Arms", "slug": "front-upper-control-arm" },
-      { "id": "rear-lower-control-arm", "name": "Rear Lower Control Arms", "slug": "rear-lower-control-arm" },
-      { "id": "rear-upper-control-arm", "name": "Rear Upper Control Arms", "slug": "rear-upper-control-arm" }
-    ]
-  },
-  {
-    "id": "trailing-arms",
-    "name": "Trailing Arms",
-    "slug": "trailing-arms",
-    "description": "High-strength trailing arm assemblies for rear suspension systems.",
-    "icon": "Link",
-    "children": [
-      { "id": "front-trailing-arm", "name": "Front Trailing Arms", "slug": "front-trailing-arm" },
-      { "id": "rear-trailing-arm", "name": "Rear Trailing Arms", "slug": "rear-trailing-arm" }
-    ]
-  },
-  {
-    "id": "links-rods",
-    "name": "Suspension Links & Rods",
-    "slug": "links-rods",
-    "description": "Stabilizer links, tie rod ends, and steering linkage components.",
-    "icon": "Component",
-    "children": [
-      { "id": "stabilizer-link", "name": "Stabilizer Links", "slug": "stabilizer-link" },
-      { "id": "tie-rod-end", "name": "Tie Rod Ends", "slug": "tie-rod-end" },
-      { "id": "rack-end", "name": "Rack Ends", "slug": "rack-end" },
-      { "id": "drag-link", "name": "Drag Links", "slug": "drag-link" }
-    ]
-  },
-  {
-    "id": "ball-joints",
-    "name": "Ball Joints",
-    "slug": "ball-joints",
-    "description": "Durable ball joints designed for optimal steering and suspension performance.",
-    "icon": "CircleDot",
-    "children": [
-      { "id": "front-lower-ball-joint", "name": "Front Lower Ball Joints", "slug": "front-lower-ball-joint" },
-      { "id": "front-upper-ball-joint", "name": "Front Upper Ball Joints", "slug": "front-upper-ball-joint" },
-      { "id": "rear-ball-joint", "name": "Rear Ball Joints", "slug": "rear-ball-joint" }
-    ]
-  },
-  {
     "id": "bushings",
     "name": "Suspension Bushings",
     "slug": "bushings",
     "description": "High-quality rubber and polyurethane bushings for vibration dampening and ride comfort.",
     "icon": "Disc",
     "children": [
-      { "id": "control-arm-bushing", "name": "Control Arm Bushings", "slug": "control-arm-bushing" },
-      { "id": "stabilizer-bar-bushing", "name": "Stabilizer Bar Bushings", "slug": "stabilizer-bar-bushing" },
-      { "id": "leaf-spring-bushing", "name": "Leaf Spring Bushings", "slug": "leaf-spring-bushing" }
+      { "id": "control-arm-bushing", "name": "摆臂胶套", "slug": "control-arm-bushing" },
+      { "id": "trailing-arm-bushing", "name": "刀臂胶套", "slug": "trailing-arm-bushing" }
     ]
-  },
-  {
-    "id": "other",
-    "name": "Other Suspension Components",
-    "slug": "other",
-    "description": "Additional chassis and suspension components for complete vehicle coverage.",
-    "icon": "MoreHorizontal",
-    "children": []
   }
 ]
