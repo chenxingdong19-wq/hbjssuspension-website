@@ -19,6 +19,19 @@
     ]
   },
   {
+    "id": "rear-suspension-parts",
+    "name": "Rear Suspension Parts",
+    "slug": "rear-suspension-parts",
+    "description": "Complete rear suspension components including control arms, trailing arms, and auxiliary arms.",
+    "icon": "Link",
+    "children": [
+      { "id": "rear-control-arm", "name": "Rear Control Arms", "slug": "rear-control-arm" },
+      { "id": "rear-trailing-arm", "name": "Rear Trailing Arms", "slug": "rear-trailing-arm" },
+      { "id": "rear-auxiliary-arm", "name": "Rear Auxiliary Arms", "slug": "rear-auxiliary-arm" },
+      { "id": "rear-upper-arm", "name": "Rear Upper Arms", "slug": "rear-upper-arm" }
+    ]
+  },
+  {
     "id": "bushings",
     "name": "Bushings",
     "slug": "bushings",
