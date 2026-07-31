@@ -2,9 +2,9 @@
   {
     "id": "control-arm-001",
     "name": "Front Lower Control Arm",
-    "category": "Control Arm Assembly",
+    "category": "Control Arms",
     "categorySlug": "control-arms",
-    "subcategorySlug": "front-lower-control-arm",
+    "subcategorySlug": "control-arms",
     "image": "/assets/products/control-arms/control-arm-001/01.webp",
     "gallery": [
       "/assets/products/control-arms/control-arm-001/01.webp",
@@ -23,9 +23,9 @@
   {
     "id": "control-arm-002",
     "name": "Rear Upper Control Arm",
-    "category": "Control Arm Assembly",
+    "category": "Control Arms",
     "categorySlug": "control-arms",
-    "subcategorySlug": "rear-upper-control-arm",
+    "subcategorySlug": "control-arms",
     "image": "/assets/products/control-arms/control-arm-002/01.webp",
     "gallery": [
       "/assets/products/control-arms/control-arm-002/01.webp"
@@ -42,9 +42,9 @@
   {
     "id": "control-arm-003",
     "name": "Front Control Arm with Ball Joint",
-    "category": "Control Arm Assembly",
+    "category": "Control Arms",
     "categorySlug": "control-arms",
-    "subcategorySlug": "front-lower-control-arm",
+    "subcategorySlug": "control-arms",
     "image": "/assets/products/control-arms/control-arm-003/01.webp",
     "gallery": [
       "/assets/products/control-arms/control-arm-003/01.webp"
@@ -61,9 +61,9 @@
   {
     "id": "ball-joint-001",
     "name": "Front Lower Ball Joint",
-    "category": "Ball Joint",
-    "categorySlug": "ball-joints",
-    "subcategorySlug": "front-lower-ball-joint",
+    "category": "Stabilizer Links & Ball Joints",
+    "categorySlug": "stabilizer-links-ball-joints",
+    "subcategorySlug": "suspension-ball-joint",
     "image": "/assets/products/ball-joints/ball-joint-001/01.webp",
     "gallery": [
       "/assets/products/ball-joints/ball-joint-001/01.webp"
@@ -80,9 +80,9 @@
   {
     "id": "ball-joint-002",
     "name": "Upper Ball Joint Assembly",
-    "category": "Ball Joint",
-    "categorySlug": "ball-joints",
-    "subcategorySlug": "front-upper-ball-joint",
+    "category": "Stabilizer Links & Ball Joints",
+    "categorySlug": "stabilizer-links-ball-joints",
+    "subcategorySlug": "suspension-ball-joint",
     "image": "/assets/products/ball-joints/ball-joint-002/01.webp",
     "gallery": [
       "/assets/products/ball-joints/ball-joint-002/01.webp"
@@ -99,7 +99,7 @@
   {
     "id": "bushing-001",
     "name": "Control Arm Bushing Kit",
-    "category": "Rubber Bushings",
+    "category": "Bushings",
     "categorySlug": "bushings",
     "subcategorySlug": "control-arm-bushing",
     "image": "/assets/products/bushings/bushing-001/01.webp",
@@ -119,9 +119,9 @@
   {
     "id": "bushing-002",
     "name": "Stabilizer Bar Bushing",
-    "category": "Rubber Bushings",
+    "category": "Bushings",
     "categorySlug": "bushings",
-    "subcategorySlug": "trailing-arm-bushing",
+    "subcategorySlug": "suspension-small-bushing",
     "image": "/assets/products/bushings/bushing-002/01.webp",
     "gallery": [
       "/assets/products/bushings/bushing-002/01.webp"
@@ -138,9 +138,9 @@
   {
     "id": "other-001",
     "name": "Tie Rod End Assembly",
-    "category": "Suspension Components",
-    "categorySlug": "links-rods",
-    "subcategorySlug": "tie-rod-end",
+    "category": "Stabilizer Links & Ball Joints",
+    "categorySlug": "stabilizer-links-ball-joints",
+    "subcategorySlug": "front-stabilizer-link-ball-joint",
     "image": "/assets/products/links-rods/other-001/01.svg",
     "gallery": [
       "/assets/products/links-rods/other-001/01.svg"
@@ -157,9 +157,9 @@
   {
     "id": "other-002",
     "name": "Stabilizer Link Assembly",
-    "category": "Suspension Components",
-    "categorySlug": "links-rods",
-    "subcategorySlug": "stabilizer-link",
+    "category": "Stabilizer Links & Ball Joints",
+    "categorySlug": "stabilizer-links-ball-joints",
+    "subcategorySlug": "front-stabilizer-link-ball-joint",
     "image": "/assets/products/links-rods/other-002/01.webp",
     "gallery": [
       "/assets/products/links-rods/other-002/01.webp"
@@ -176,9 +176,9 @@
   {
     "id": "other-003",
     "name": "Rack End Assembly",
-    "category": "Suspension Components",
-    "categorySlug": "links-rods",
-    "subcategorySlug": "rack-end",
+    "category": "Other Products",
+    "categorySlug": "other-products",
+    "subcategorySlug": "other-products",
     "image": "/assets/products/links-rods/other-003/01.webp",
     "gallery": [
       "/assets/products/links-rods/other-003/01.webp"

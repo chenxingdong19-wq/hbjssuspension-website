@@ -113,10 +113,10 @@ body {
     inset 0 1px 0 rgba(255,255,255,0.75),
     0 8px 40px rgba(0,0,0,0.1);
   transform-origin: top center;
-  animation: dropdownIn 0.35s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation: dropdownIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
 }
 @keyframes dropdownIn {
-  from { opacity: 0; transform: scale(0.92) translateY(-16px); filter: blur(8px); }
+  from { opacity: 0; transform: scale(0.9) translateY(-20px); filter: blur(8px); }
   to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
 

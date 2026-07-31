@@ -49,11 +49,11 @@ export default function ProductsContent() {
 
   const handleMenuEnter = (slug: string) => {
     clearTimers();
-    enterTimer.current = setTimeout(() => setOpenMenu(slug), 350);
+    enterTimer.current = setTimeout(() => setOpenMenu(slug), 200);
   };
   const handleMenuLeave = () => {
     clearTimers();
-    leaveTimer.current = setTimeout(() => setOpenMenu(null), 600);
+    leaveTimer.current = setTimeout(() => setOpenMenu(null), 800);
   };
 
   // ---------- filtering ----------
@@ -66,13 +66,18 @@ export default function ProductsContent() {
         p.oem.toLowerCase().includes(search.toLowerCase()) ||
         p.vehicle.toLowerCase().includes(search.toLowerCase());
       if (!m) return false;
-      // subcategory takes priority (fine filter)
+      // subcategory takes priority (fine filter for subcategories)
       if (subcategoryFilter) return p.subcategorySlug === subcategoryFilter;
-      // category = all subcategory slugs under that top-level cat
+      // category filter
       if (categoryFilter) {
         const catObj = categories.find((c) => c.slug === categoryFilter);
-        if (catObj) return catObj.children.some((s) => s.slug === p.subcategorySlug);
-        return false;
+        if (!catObj) return false;
+        // if category has children, match all products whose subcategory matches one of the children
+        if (catObj.children.length > 0) {
+          return catObj.children.some((s) => s.slug === p.subcategorySlug);
+        }
+        // if category has NO children, match by categorySlug directly
+        return p.categorySlug === categoryFilter;
       }
       return true; // show all
     });

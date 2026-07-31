@@ -8,44 +8,33 @@
     "children": []
   },
   {
-    "id": "trailing-arms",
-    "name": "Trailing Arms",
-    "slug": "trailing-arms",
-    "description": "High-strength trailing arm assemblies for rear suspension systems.",
-    "icon": "Link",
-    "children": []
-  },
-  {
-    "id": "links-rods",
-    "name": "Suspension Links & Rods",
-    "slug": "links-rods",
-    "description": "Stabilizer links, tie rod ends, and steering linkage components.",
-    "icon": "Component",
-    "children": []
-  },
-  {
-    "id": "ball-joints",
-    "name": "Ball Joints",
-    "slug": "ball-joints",
-    "description": "Durable ball joints designed for optimal steering and suspension performance.",
+    "id": "stabilizer-links-ball-joints",
+    "name": "Stabilizer Links & Ball Joints",
+    "slug": "stabilizer-links-ball-joints",
+    "description": "Stabilizer links, tie rod ends, ball joints, and steering components.",
     "icon": "CircleDot",
-    "children": []
+    "children": [
+      { "id": "front-stabilizer-link-ball-joint", "name": "Front Stabilizer Link Ball Joints", "slug": "front-stabilizer-link-ball-joint" },
+      { "id": "suspension-ball-joint", "name": "Suspension Ball Joints", "slug": "suspension-ball-joint" }
+    ]
   },
   {
     "id": "bushings",
-    "name": "Suspension Bushings",
+    "name": "Bushings",
     "slug": "bushings",
     "description": "High-quality rubber and polyurethane bushings for vibration dampening and ride comfort.",
     "icon": "Disc",
     "children": [
-      { "id": "control-arm-bushing", "name": "摆臂胶套", "slug": "control-arm-bushing" },
-      { "id": "trailing-arm-bushing", "name": "刀臂胶套", "slug": "trailing-arm-bushing" }
+      { "id": "suspension-large-bushing", "name": "Suspension Large Bushings", "slug": "suspension-large-bushing" },
+      { "id": "suspension-small-bushing", "name": "Suspension Small Bushings", "slug": "suspension-small-bushing" },
+      { "id": "control-arm-bushing", "name": "Control Arm Bushings", "slug": "control-arm-bushing" },
+      { "id": "custom-size-bushing", "name": "Custom Size Bushings", "slug": "custom-size-bushing" }
     ]
   },
   {
-    "id": "other",
-    "name": "Other Suspension Components",
-    "slug": "other",
+    "id": "other-products",
+    "name": "Other Products",
+    "slug": "other-products",
     "description": "Additional chassis and suspension components for complete vehicle coverage.",
     "icon": "MoreHorizontal",
     "children": []
