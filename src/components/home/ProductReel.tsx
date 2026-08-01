@@ -21,22 +21,37 @@ export default function ProductReel() {
         <div className="absolute top-[40%] left-[30%] w-[55%] h-[55%] bg-gradient-to-tr from-rose-300/5 via-slate-200/4 to-transparent rounded-full blur-3xl" />
       </div>
 
-      {/* ===== Drop shadow under the product ===== */}
+      {/* ===== Soft floating shadow (diffuse, subtle) ===== */}
       <div
-        className="absolute bottom-[18%] left-[20%] right-[20%] h-[15%] pointer-events-none rounded-full"
+        className="absolute bottom-[16%] left-[18%] right-[18%] h-[18%] pointer-events-none rounded-full"
         style={{
-          background: "radial-gradient(ellipse at center, rgba(0,0,0,0.12) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse at center, rgba(0,0,0,0.07) 0%, transparent 75%)",
+          filter: "blur(2px)",
           zIndex: 1,
         }}
       />
 
-      {/* ===== VIDEO — mask-edge fade, no border, no box ===== */}
+      {/* ===== Soft glass halo behind video (seams into background) ===== */}
+      <div
+        className="absolute inset-0 pointer-events-none rounded-[36px]"
+        style={{
+          zIndex: 1,
+          background:
+            "radial-gradient(ellipse 52% 52% at 50% 46%, rgba(255,255,255,0.10), rgba(191,219,254,0.06) 55%, transparent 78%)",
+          filter: "blur(28px)",
+        }}
+      />
+
+      {/* ===== VIDEO — soft multi-stop mask fade, floating, no box ===== */}
       <div
         className="absolute inset-0 flex items-center justify-center"
         style={{
           zIndex: 2,
-          maskImage: "radial-gradient(ellipse 65% 60% at 50% 42%, black 45%, transparent 80%)",
-          WebkitMaskImage: "radial-gradient(ellipse 65% 60% at 50% 42%, black 45%, transparent 80%)",
+          opacity: 0.96,
+          maskImage:
+            "radial-gradient(ellipse 62% 58% at 50% 44%, black 30%, rgba(0,0,0,0.55) 56%, rgba(0,0,0,0.18) 72%, transparent 92%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 62% 58% at 50% 44%, black 30%, rgba(0,0,0,0.55) 56%, rgba(0,0,0,0.18) 72%, transparent 92%)",
         }}
       >
         {!videoFailed ? (
@@ -47,7 +62,7 @@ export default function ProductReel() {
             muted
             playsInline
             preload="auto"
-            className="w-[140%] h-[140%] object-contain"
+            className="w-[118%] h-[118%] object-contain"
             style={{
               border: "none",
               background: "transparent",
@@ -62,7 +77,7 @@ export default function ProductReel() {
             <img
               src="/assets/hero/hero.svg"
               alt="Automotive Suspension Components"
-              className="w-[120%] h-[120%] object-contain"
+              className="w-[118%] h-[118%] object-contain"
               loading="eager"
             />
           </div>

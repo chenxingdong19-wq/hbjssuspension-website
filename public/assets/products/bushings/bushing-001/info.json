@@ -6,5 +6,6 @@
   "process": "Rubber Molding, Steel Insert Bonding, Vulcanization",
   "packaging": "Kit packaging with individual compartments, 30 units per carton",
   "description": "Complete control arm bushing kit manufactured from high-grade natural rubber with bonded steel sleeves. Designed for automotive suspension systems, it provides superior vibration dampening and noise isolation for enhanced ride comfort. Precision-engineered as a direct replacement component with consistent fit and reliable performance.",
-  "featured": false
+  "featured": false,
+  "displayName": "Control Arm Bushing Kit"
 }

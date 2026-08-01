@@ -3,17 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { getCompany } from "@/lib/data";
-
-declare global {
-  interface Window {
-    Tawk_API?: {
-      toggle?: () => void;
-      hideWidget?: () => void;
-      addEvent?: (eventName: string, attributes?: Record<string, unknown>) => void;
-      [key: string]: unknown;
-    };
-  }
-}
+import "@/lib/tawk"; // global Window.Tawk_API types (side-effect import)
 
 const spring = { type: "spring", stiffness: 260, damping: 22, mass: 0.8 } as const;
 

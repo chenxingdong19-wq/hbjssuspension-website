@@ -40,6 +40,8 @@ export interface Company {
 export interface Product {
   id: string;
   name: string;
+  /** Short name shown on product cards (falls back to `name`) */
+  displayName?: string;
   category: string;
   categorySlug: string;
   subcategorySlug: string;

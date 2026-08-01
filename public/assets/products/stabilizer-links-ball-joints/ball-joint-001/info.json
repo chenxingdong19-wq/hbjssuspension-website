@@ -6,5 +6,6 @@
   "process": "Forging, Heat Treatment, Precision Grinding, Assembly",
   "packaging": "Individual box, 50 units per master carton",
   "description": "Heavy-duty ball joint designed for automotive front suspension systems. Features a heat-treated alloy steel ball stud with precision-polished bearing surface for smooth articulation. The greaseable design with protective dust boot ensures extended service intervals and consistent performance under demanding conditions.",
-  "featured": true
+  "featured": true,
+  "displayName": "Front Lower Ball Joint"
 }

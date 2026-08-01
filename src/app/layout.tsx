@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 import ContactFloat from "@/components/ui/ContactFloat";
 import companyData from "../../data/company.json";
 import "./globals.css";
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Script id="schema-org" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context":"https://schema.org","@type":"Organization",name:company.name,alternateName:company.brand,url:baseUrl,description:company.description,address:{"@type":"PostalAddress",addressLocality:`${company.contact.address.county}, ${company.contact.address.city}`,addressRegion:company.contact.address.province,addressCountry:"CN"},contactPoint:{"@type":"ContactPoint",telephone:company.contact.phones[0],contactType:"sales",email:company.contact.email},sameAs:[] }) }} />
       </head>
       <body className="min-h-full flex flex-col bg-ambient text-[#0F172A] antialiased">
+        <ScrollProgress />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

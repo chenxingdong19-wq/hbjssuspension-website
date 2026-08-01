@@ -7,17 +7,7 @@ import { ArrowLeft, Check, Send, Package, Cog, SprayCan, Wrench, CheckCircle2 } 
 import type { Product } from "@/lib/data";
 import ProductGallery from "@/components/products/ProductGallery";
 import InquiryForm from "@/components/ui/InquiryForm";
-
-declare global {
-  interface Window {
-    Tawk_API?: {
-      toggle?: () => void;
-      hideWidget?: () => void;
-      addEvent?: (eventName: string, attributes?: Record<string, unknown>) => void;
-      [key: string]: unknown;
-    };
-  }
-}
+import { sendTawkInquiry } from "@/lib/tawk";
 
 const specs = [
   { key: "material", label: "Material", icon: Cog },
@@ -29,36 +19,24 @@ const specs = [
 export default function ProductDetailClient({ product }: { product: Product }) {
   const [inquiryState, setInquiryState] = useState<"idle" | "sending" | "sent">("idle");
 
-  const handleInquiry = () => {
+  const handleInquiry = async () => {
     if (inquiryState !== "idle") return;
     setInquiryState("sending");
 
     // Gather product info automatically
     const productUrl = typeof window !== "undefined" ? window.location.href : "";
-    const inquiryInfo = {
+
+    // Send to Tawk.to background (no popup, no navigation) with readiness wait
+    await sendTawkInquiry({
       product: product.name,
       id: product.id,
       category: product.category,
       oem: product.oem || "",
       url: productUrl,
-    };
+    });
 
-    // Send to Tawk.to background (no popup, no navigation) via addEvent
-    try {
-      const tawk = typeof window !== "undefined" ? window.Tawk_API : undefined;
-      if (tawk && typeof tawk.addEvent === "function") {
-        tawk.addEvent("New Product Inquiry", inquiryInfo);
-      } else {
-        // Tawk not loaded - degrade gracefully, never break the page
-        console.info("Tawk.to not ready - inquiry logged locally", inquiryInfo);
-      }
-    } catch (e) {
-      // Defensive: never let an inquiry attempt break the page
-      console.warn("Inquiry submission failed silently", e);
-    }
-
-    // Show success feedback
-    setTimeout(() => setInquiryState("sent"), 400);
+    // Show success feedback regardless (query recorded locally / into Tawk)
+    setTimeout(() => setInquiryState("sent"), 350);
     setTimeout(() => setInquiryState("idle"), 3500);
   };
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { getCategories, getCompany } from "@/lib/data";
 
@@ -64,14 +65,20 @@ export default function Navbar() {
   }, [hidden]);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-600 ease-in-out ${
-        hidden ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
-      } ${
-        scrolled
-          ? "navbar-scrolled border-b border-black/[0.06] shadow-sm"
-          : "bg-transparent"
+    <motion.header
+      initial={false}
+      animate={{
+        y: hidden ? -80 : 0,
+        opacity: hidden ? 0 : scrolled ? 0.92 : 1,
+      }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className={`fixed top-0 left-0 right-0 z-50 ${
+        scrolled ? "navbar-scrolled border-b border-black/[0.06] shadow-sm" : "bg-transparent"
       }`}
+      style={{
+        backdropFilter: hidden ? "blur(0px)" : scrolled ? "blur(40px) saturate(2) brightness(1.08)" : "none",
+        WebkitBackdropFilter: hidden ? "blur(0px)" : scrolled ? "blur(40px) saturate(2) brightness(1.08)" : "none",
+      }}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
@@ -156,20 +163,20 @@ export default function Navbar() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`block px-4 py-3 text-base font-medium transition-colors rounded-md ${
-                    pathname === link.href || (link.href === "/products" && pathname.startsWith("/products"))
-                      ? "text-accent bg-red-50"
-                      : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={`block px-4 py-3 text-base font-medium transition-colors rounded-md ${
+                  pathname === link.href || (link.href === "/products" && pathname.startsWith("/products"))
+                    ? "text-accent bg-red-50"
+                    : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
@@ -180,6 +187,6 @@ export default function Navbar() {
           </div>
         )}
       </nav>
-    </header>
+    </motion.header>
   );
 }

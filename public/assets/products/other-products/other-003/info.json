@@ -6,5 +6,6 @@
   "process": "Forging, Thread Rolling, Heat Treatment",
   "packaging": "Individual box, 50 units per master carton",
   "description": "Steering rack end assembly designed for automotive steering systems. Constructed from heat-treated alloy steel with a precision-ground ball seat, it delivers accurate steering feedback and responsive handling. Built for long service life and consistent performance across diverse operating conditions.",
-  "featured": false
+  "featured": false,
+  "displayName": "Rack End"
 }

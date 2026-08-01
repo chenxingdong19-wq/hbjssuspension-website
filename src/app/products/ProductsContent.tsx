@@ -4,11 +4,11 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Search, ChevronDown, X } from "lucide-react";
-import { getProducts, getCategories } from "@/lib/data";
+import { getCategories } from "@/lib/data";
 import type { Product } from "@/lib/data";
 import ProductCard from "@/components/products/ProductCard";
 
-export default function ProductsContent() {
+export default function ProductsContent({ products }: { products: Product[] }) {
   const [search, setSearch] = useState("");
   // "category" filter = top-level: show all subcategories under it
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
@@ -21,7 +21,6 @@ export default function ProductsContent() {
   const enterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const products = getProducts();
   const categories = getCategories();
 
   // URL param seeding
@@ -269,11 +268,14 @@ export default function ProductsContent() {
 
         {/* Results */}
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {filtered.map((p) => (
-              <ProductCard key={p.id} product={p} />
+          <motion.div
+            layout
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          >
+            {filtered.map((p, i) => (
+              <ProductCard key={p.id} product={p} index={i} />
             ))}
-          </div>
+          </motion.div>
         ) : (
           <div className="text-center py-20">
             <p className="text-[#64748B]">No products found matching your criteria.</p>
