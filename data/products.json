@@ -64,9 +64,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "suspension-ball-joint",
-    "image": "/assets/products/ball-joints/ball-joint-001/01.webp",
+    "image": "/assets/products/stabilizer-links-ball-joints/ball-joint-001/01.webp",
     "gallery": [
-      "/assets/products/ball-joints/ball-joint-001/01.webp"
+      "/assets/products/stabilizer-links-ball-joints/ball-joint-001/01.webp"
     ],
     "oem": "K750177",
     "vehicle": "Toyota Camry 2007-2011, RAV4 2006-2012",
@@ -83,9 +83,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "suspension-ball-joint",
-    "image": "/assets/products/ball-joints/ball-joint-002/01.webp",
+    "image": "/assets/products/stabilizer-links-ball-joints/ball-joint-002/01.webp",
     "gallery": [
-      "/assets/products/ball-joints/ball-joint-002/01.webp"
+      "/assets/products/stabilizer-links-ball-joints/ball-joint-002/01.webp"
     ],
     "oem": "K750178",
     "vehicle": "Honda Accord 2008-2012, Civic 2006-2011",
@@ -141,9 +141,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "front-stabilizer-link-ball-joint",
-    "image": "/assets/products/links-rods/other-001/01.svg",
+    "image": "/assets/products/stabilizer-links-ball-joints/other-001/01.svg",
     "gallery": [
-      "/assets/products/links-rods/other-001/01.svg"
+      "/assets/products/stabilizer-links-ball-joints/other-001/01.svg"
     ],
     "oem": "56820-2S000",
     "vehicle": "Hyundai/Kia Multi-Model",
@@ -160,9 +160,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "front-stabilizer-link-ball-joint",
-    "image": "/assets/products/links-rods/other-002/01.webp",
+    "image": "/assets/products/stabilizer-links-ball-joints/other-002/01.webp",
     "gallery": [
-      "/assets/products/links-rods/other-002/01.webp"
+      "/assets/products/stabilizer-links-ball-joints/other-002/01.webp"
     ],
     "oem": "54830-2S000",
     "vehicle": "Hyundai Sonata 2011-2014",
@@ -179,9 +179,9 @@
     "category": "Other Products",
     "categorySlug": "other-products",
     "subcategorySlug": "other-products",
-    "image": "/assets/products/links-rods/other-003/01.webp",
+    "image": "/assets/products/other-products/other-003/01.webp",
     "gallery": [
-      "/assets/products/links-rods/other-003/01.webp"
+      "/assets/products/other-products/other-003/01.webp"
     ],
     "oem": "57724-2S000",
     "vehicle": "Hyundai/Kia Multi-Model",
