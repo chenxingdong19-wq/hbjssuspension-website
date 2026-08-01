@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ContactFloat from "@/components/ui/ContactFloat";
 import companyData from "../../data/company.json";
 import "./globals.css";
 
@@ -33,6 +34,32 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ContactFloat />
+
+        {/* Tawk.to — live chat, hidden default bubble (custom button opens it) */}
+        <Script id="tawk-to" strategy="afterInteractive">
+          {`
+            var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+            (function () {
+              var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+              s1.async = true;
+              s1.src = 'https://embed.tawk.to/6a6d5ae003ca471d44326847/1jutim02m';
+              s1.charset = 'UTF-8';
+              s1.setAttribute('crossorigin', '*');
+              s0.parentNode.insertBefore(s1, s0);
+            })();
+          `}
+        </Script>
+        <Script id="tawk-hide-widget" strategy="afterInteractive">
+          {`
+            window.Tawk_API = window.Tawk_API || {};
+            window.Tawk_API.onLoad = function () {
+              if (window.Tawk_API.hideWidget) {
+                window.Tawk_API.hideWidget();
+              }
+            };
+          `}
+        </Script>
       </body>
     </html>
   );
