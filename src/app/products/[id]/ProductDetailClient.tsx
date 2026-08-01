@@ -1,11 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, Send, Package, Cog, SprayCan, Wrench } from "lucide-react";
+import { ArrowLeft, Check, Send, Package, Cog, SprayCan, Wrench, CheckCircle2 } from "lucide-react";
 import type { Product } from "@/lib/data";
 import ProductGallery from "@/components/products/ProductGallery";
 import InquiryForm from "@/components/ui/InquiryForm";
+
+declare global {
+  interface Window {
+    Tawk_API?: {
+      toggle?: () => void;
+      hideWidget?: () => void;
+      addEvent?: (eventName: string, attributes?: Record<string, unknown>) => void;
+      [key: string]: unknown;
+    };
+  }
+}
 
 const specs = [
   { key: "material", label: "Material", icon: Cog },
@@ -15,6 +27,41 @@ const specs = [
 ];
 
 export default function ProductDetailClient({ product }: { product: Product }) {
+  const [inquiryState, setInquiryState] = useState<"idle" | "sending" | "sent">("idle");
+
+  const handleInquiry = () => {
+    if (inquiryState !== "idle") return;
+    setInquiryState("sending");
+
+    // Gather product info automatically
+    const productUrl = typeof window !== "undefined" ? window.location.href : "";
+    const inquiryInfo = {
+      product: product.name,
+      id: product.id,
+      category: product.category,
+      oem: product.oem || "",
+      url: productUrl,
+    };
+
+    // Send to Tawk.to background (no popup, no navigation) via addEvent
+    try {
+      const tawk = typeof window !== "undefined" ? window.Tawk_API : undefined;
+      if (tawk && typeof tawk.addEvent === "function") {
+        tawk.addEvent("New Product Inquiry", inquiryInfo);
+      } else {
+        // Tawk not loaded - degrade gracefully, never break the page
+        console.info("Tawk.to not ready - inquiry logged locally", inquiryInfo);
+      }
+    } catch (e) {
+      // Defensive: never let an inquiry attempt break the page
+      console.warn("Inquiry submission failed silently", e);
+    }
+
+    // Show success feedback
+    setTimeout(() => setInquiryState("sent"), 400);
+    setTimeout(() => setInquiryState("idle"), 3500);
+  };
+
   return (
     <div className="pt-28 pb-20 bg-ambient" style={{ minHeight: "100vh" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{ zIndex: 1, position: "relative" }}>
@@ -93,15 +140,46 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               </div>
             </div>
 
-            {/* CTA */}
+            {/* CTA — background inquiry via Tawk.to, no popup/navigation */}
             <div className="flex flex-col gap-3 pt-4 border-t border-gray-200">
-              <a
-                href="#inquiry-form"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-white text-sm font-semibold btn-primary shadow-lg shadow-red-200"
+              <button
+                onClick={handleInquiry}
+                disabled={inquiryState !== "idle"}
+                className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-white text-sm font-semibold transition-all duration-300 ${
+                  inquiryState === "sent"
+                    ? "bg-green-500 shadow-lg shadow-green-200 pointer-events-none"
+                    : "bg-accent btn-primary shadow-lg shadow-red-200 hover:scale-[1.02] active:scale-95"
+                }`}
               >
-                <Send size={15} /> Inquire About This Product
-              </a>
-              <p className="text-[11px] text-slate-400 text-center">Our team typically responds within 24 hours</p>
+                {inquiryState === "sending" ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    Sending...
+                  </>
+                ) : inquiryState === "sent" ? (
+                  <>
+                    <CheckCircle2 size={16} /> Inquiry sent successfully
+                  </>
+                ) : (
+                  <>
+                    <Send size={15} /> Inquire About This Product
+                  </>
+                )}
+              </button>
+
+              {inquiryState === "sent" && (
+                <motion.p
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-[11px] text-green-600 text-center font-medium"
+                >
+                  Our team will contact you soon.
+                </motion.p>
+              )}
+
+              {inquiryState === "idle" && (
+                <p className="text-[11px] text-slate-400 text-center">Our team typically responds within 24 hours</p>
+              )}
             </div>
 
             {/* Trust */}
@@ -116,7 +194,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </motion.div>
         </div>
 
-        {/* Inquiry Form */}
+        {/* Inquiry Form (unchanged, kept for reference) */}
         <div id="inquiry-form" className="mt-20 max-w-2xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

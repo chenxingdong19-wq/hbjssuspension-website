@@ -7,8 +7,9 @@ import { getCompany } from "@/lib/data";
 declare global {
   interface Window {
     Tawk_API?: {
-      toggle: () => void;
-      hideWidget: () => void;
+      toggle?: () => void;
+      hideWidget?: () => void;
+      addEvent?: (eventName: string, attributes?: Record<string, unknown>) => void;
       [key: string]: unknown;
     };
   }
@@ -75,7 +76,7 @@ export default function ContactFloat() {
     setTimeout(() => setPressed(null), 300);
     setExpanded(false);
     // Open Tawk.to widget
-    if (typeof window !== "undefined" && window.Tawk_API) {
+    if (typeof window !== "undefined" && window.Tawk_API?.toggle) {
       window.Tawk_API.toggle();
     } else {
       window.open("https://tawk.to/chat/6a6d5ae003ca471d44326847/1jutim02m", "_blank");
