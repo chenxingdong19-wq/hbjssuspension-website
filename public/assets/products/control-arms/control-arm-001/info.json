@@ -1,10 +1,10 @@
 {
-  "oem": "54500-2S000",
-  "vehicle": "Hyundai Sonata 2011-2014, Kia Optima 2011-2015",
+  "oem": "54500-0Q000 54501-0Q000",
+  "vehicle": "Hyundai  KIA ",
   "material": "Forged Steel",
   "surface": "Electrophoretic Coating + Powder Coating",
   "process": "Forging, CNC Machining, Robotic Welding, Surface Treatment",
-  "packaging": "Individual box with foam padding, 20 units per master carton",
+  "packaging": "Single foam bag packaging, 6 pieces per carton; paper dividers included inside the carton.",
   "description": "Designed for automotive front suspension systems, this forged steel lower control arm provides reliable support and stable handling performance. Manufactured with precision CNC machining and robotic welding, it delivers excellent durability, precise geometry, and long service life. Multi-layer corrosion protection ensures consistent performance across diverse operating environments.",
   "featured": true
 }

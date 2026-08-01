@@ -191,5 +191,47 @@
     "description": "Steering rack end assembly designed for automotive steering systems. Constructed from heat-treated alloy steel with a precision-ground ball seat, it delivers accurate steering feedback and responsive handling. Built for long service life and consistent performance across diverse operating conditions.",
     "packaging": "Individual box, 50 units per master carton",
     "featured": false
+  },
+  {
+    "id": "control-arm-004",
+    "name": "Front Lower Control Arm - Hyundai/Kia",
+    "category": "Control Arms",
+    "categorySlug": "control-arms",
+    "subcategorySlug": "control-arms",
+    "image": "/assets/products/control-arms/control-arm-004/01.webp",
+    "gallery": [
+      "/assets/products/control-arms/control-arm-004/01.webp",
+      "/assets/products/control-arms/control-arm-004/02.webp",
+      "/assets/products/control-arms/control-arm-004/03.webp"
+    ],
+    "oem": "54500-1X000 54501-1X000",
+    "vehicle": "Hyundai KIA",
+    "material": "Forged Steel",
+    "surface": "Electrophoretic Coating + Powder Coating",
+    "process": "Forging, CNC Machining, Robotic Welding, Surface Treatment",
+    "description": "Designed for automotive front suspension systems, this forged steel lower control arm provides reliable support and stable handling performance. Manufactured with precision CNC machining and robotic welding, it delivers excellent durability, precise geometry, and long service life. Multi-layer corrosion protection ensures consistent performance across diverse operating environments.",
+    "packaging": "Single foam bag packaging, 6 pieces per carton; paper dividers included inside the carton.",
+    "featured": true
+  },
+  {
+    "id": "control-arm-005",
+    "name": "Front Lower Control Arm - Hyundai/Kia",
+    "category": "Control Arms",
+    "categorySlug": "control-arms",
+    "subcategorySlug": "control-arms",
+    "image": "/assets/products/control-arms/control-arm-005/01.webp",
+    "gallery": [
+      "/assets/products/control-arms/control-arm-005/01.webp",
+      "/assets/products/control-arms/control-arm-005/02.webp",
+      "/assets/products/control-arms/control-arm-005/03.webp"
+    ],
+    "oem": "54500-2B500 54501-2B500",
+    "vehicle": "Hyundai KIA",
+    "material": "Forged Steel",
+    "surface": "Electrophoretic Coating + Powder Coating",
+    "process": "Forging, CNC Machining, Robotic Welding, Surface Treatment",
+    "description": "Designed for automotive front suspension systems, this forged steel lower control arm provides reliable support and stable handling performance. Manufactured with precision CNC machining and robotic welding, it delivers excellent durability, precise geometry, and long service life. Multi-layer corrosion protection ensures consistent performance across diverse operating environments.",
+    "packaging": "Single foam bag packaging, 6 pieces per carton; paper dividers included inside the carton.",
+    "featured": true
   }
 ]

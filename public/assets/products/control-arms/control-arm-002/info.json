@@ -1,10 +1,10 @@
 {
-  "oem": "55130-2S000",
-  "vehicle": "Hyundai Tucson 2010-2015, Kia Sportage 2011-2016",
-  "material": "Stamped Steel",
-  "surface": "Electrophoretic Coating",
-  "process": "Stamping, Robotic Welding, Surface Treatment",
-  "packaging": "Individual box, 15 units per master carton",
-  "description": "Engineered for automotive rear suspension systems, this upper control arm assembly offers dependable structural support and alignment stability. Constructed with stamped steel and reinforced welding points, it provides consistent fitment and long-term durability. Meets or exceeds OEM specifications for quality and performance.",
+  "oem": "54500-0U000 54501-0U000",
+  "vehicle": "Hyundai KIA ",
+  "material": "Forged Steel",
+  "surface": "Electrophoretic Coating + Powder Coating",
+  "process": "Forging, CNC Machining, Robotic Welding, Surface Treatment",
+  "packaging": "Single foam bag packaging, 6 pieces per carton; paper dividers included inside the carton.",
+  "description": "Designed for automotive front suspension systems, this forged steel lower control arm provides reliable support and stable handling performance. Manufactured with precision CNC machining and robotic welding, it delivers excellent durability, precise geometry, and long service life. Multi-layer corrosion protection ensures consistent performance across diverse operating environments.",
   "featured": true
 }
