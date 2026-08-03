@@ -7,6 +7,7 @@ import { ArrowLeft, Check, Send, Package, Cog, SprayCan, Wrench, CheckCircle2 } 
 import type { Product } from "@/lib/data";
 import ProductGallery from "@/components/products/ProductGallery";
 import InquiryForm from "@/components/ui/InquiryForm";
+import { sendInquiryToEmail } from "@/lib/inquiry";
 import { sendTawkInquiry } from "@/lib/tawk";
 
 const specs = [
@@ -26,16 +27,21 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     // Gather product info automatically
     const productUrl = typeof window !== "undefined" ? window.location.href : "";
 
-    // Send to Tawk.to background (no popup, no navigation) with readiness wait
-    await sendTawkInquiry({
+    const payload = {
       product: product.name,
       id: product.id,
       category: product.category,
       oem: product.oem || "",
       url: productUrl,
-    });
+    };
 
-    // Show success feedback regardless (query recorded locally / into Tawk)
+    // Primary channel: email via Web3Forms → corporate inbox
+    await sendInquiryToEmail(payload);
+
+    // Secondary: record into Tawk visitor activity (best-effort, harmless)
+    await sendTawkInquiry(payload);
+
+    // Show success feedback regardless (inquiry delivered via email)
     setTimeout(() => setInquiryState("sent"), 350);
     setTimeout(() => setInquiryState("idle"), 3500);
   };
