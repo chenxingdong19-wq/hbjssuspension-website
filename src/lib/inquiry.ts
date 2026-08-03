@@ -14,27 +14,27 @@ export interface InquiryPayload {
   url: string;
 }
 
-/**
- * Send a product inquiry as an email via Web3Forms.
- * Never throws — returns boolean so caller can degrade gracefully.
- */
-export async function sendInquiryToEmail(info: InquiryPayload): Promise<boolean> {
-  if (typeof window === "undefined") return false;
+export interface FullInquiryPayload {
+  name: string;
+  company?: string;
+  email: string;
+  country?: string;
+  product: string;
+  message: string;
+  url: string;
+}
 
+async function postToWeb3Forms(fields: Record<string, unknown>, subject: string, fromName: string): Promise<boolean> {
+  if (typeof window === "undefined") return false;
   try {
     const res = await fetch(WEB3FORMS_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({
         access_key: WEB3FORMS_ACCESS_KEY,
-        subject: `New Product Inquiry: ${info.product}`,
-        from_name: "HBJS Suspension Website",
-        // Structured body fields — surfaced in the email Web3Forms sends
-        product: info.product,
-        id: info.id,
-        oem: info.oem || "",
-        category: info.category || "",
-        url: info.url,
+        subject,
+        from_name: fromName,
+        ...fields,
       }),
     });
 
@@ -49,4 +49,42 @@ export async function sendInquiryToEmail(info: InquiryPayload): Promise<boolean>
     console.warn("[inquiry] failed silently", e);
     return false;
   }
+}
+
+/**
+ * Send a product inquiry as an email via Web3Forms (quick "Inquire" button).
+ * Never throws — returns boolean so caller can degrade gracefully.
+ */
+export async function sendInquiryToEmail(info: InquiryPayload): Promise<boolean> {
+  return postToWeb3Forms(
+    {
+      product: info.product,
+      id: info.id,
+      oem: info.oem || "",
+      category: info.category || "",
+      url: info.url,
+    },
+    `New Product Inquiry: ${info.product}`,
+    "HBJS Suspension Website"
+  );
+}
+
+/**
+ * Send a full Request-a-Quote form as an email via Web3Forms.
+ * Never throws — returns boolean so caller can degrade gracefully.
+ */
+export async function sendFullInquiryToEmail(info: FullInquiryPayload): Promise<boolean> {
+  return postToWeb3Forms(
+    {
+      name: info.name,
+      company: info.company || "",
+      email: info.email,
+      country: info.country || "",
+      product: info.product,
+      message: info.message,
+      url: info.url,
+    },
+    `Request a Quote: ${info.product || "General Inquiry"}`,
+    `${info.name || "Website Visitor"}`
+  );
 }
