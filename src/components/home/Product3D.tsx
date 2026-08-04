@@ -20,8 +20,8 @@ class CanvasErrorBoundary extends Component<{ children: ReactNode; fallback: Rea
   }
 }
 
-// Resting pose — fixed forever (position never moves)
-const FIXED_POS = new Vector3(1.1, -0.3, 0);
+// Resting pose — fixed forever (position never moves). Shifted right for breathing room.
+const FIXED_POS = new Vector3(1.9, -0.3, 0);
 
 function ModelGroup({
   interactable,
@@ -30,7 +30,6 @@ function ModelGroup({
   interactable: boolean;
   modelPath: string;
 }) {
-  // Hook at top level — key={modelPath} on the wrapping group ensures remount on model switch
   const { scene } = useGLTF(modelPath);
   const group = useRef<Group>(null);
   const rotationY = useRef(0);
@@ -122,26 +121,19 @@ export default function Product3D({
   locked: boolean;
   modelPath: string;
 }) {
-  const [modelOk, setModelOk] = useState<null | boolean>(null);
+  const [modelState, setModelState] = useState<"loading" | "ready" | "missing">("loading");
 
   useEffect(() => {
-    setModelOk(null); // reset while checking new path
-    fetch(modelPath, { method: "HEAD" })
-      .then((r) => setModelOk(r.ok))
-      .catch(() => setModelOk(false));
+    setModelState("loading");
+    // Try fetching the GLB; useGLTF will handle actual loading inside Canvas.
+    // HEAD is dropped here to save a network round-trip.
+    const img = new Image();
+    img.src = modelPath;
+    img.onload = () => setModelState("ready");
+    img.onerror = () => setModelState("missing");
   }, [modelPath]);
 
-  if (modelOk === false) {
-    // Model file does not exist — avoid rendering Canvas entirely so useGLTF
-    // never tries to load a 404 url (which would crash the 3D scene).
-    return (
-      <div className="w-full h-full flex items-center justify-center text-sm text-[#94A3B8]">
-        Model file not found — add "{modelPath.split("/").pop()}" to public/assets/models/
-      </div>
-    );
-  }
-
-  if (modelOk === null) {
+  if (modelState === "loading") {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-slate-200 border-t-accent rounded-full animate-spin" />
@@ -149,15 +141,7 @@ export default function Product3D({
     );
   }
 
-  if (modelOk === null) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-slate-200 border-t-accent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!modelOk) {
+  if (modelState === "missing") {
     return (
       <div className="w-full h-full flex items-center justify-center text-sm text-[#94A3B8]">
         Model file not found — add "{modelPath.split("/").pop()}" to public/assets/models/
@@ -175,8 +159,9 @@ export default function Product3D({
         }
       >
         <Canvas
-          dpr={[1, 1.75]}
-          camera={{ position: [2.8, 1.5, 3.4], fov: 38 }}
+          dpr={[0.8, 1.25]}
+          frameloop="demand"
+          camera={{ position: [3.0, 1.5, 3.8], fov: 38 }}
           gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false }}
           onCreated={({ scene, gl }) => {
             const pmrem = new PMREMGenerator(gl);
@@ -186,10 +171,9 @@ export default function Product3D({
           className={`!absolute !inset-0 ${locked ? "cursor-default" : "cursor-grab active:cursor-grabbing touch-none"}`}
         >
           <Suspense fallback={null}>
-            {/* key remounts the group when the model path changes, giving a clean switch */}
             <ModelGroup key={modelPath} interactable={!locked} modelPath={modelPath} />
           </Suspense>
-          <ContactShadows position={[1.1, -1.0, 0]} opacity={0.38} blur={2.4} scale={6} far={1.8} />
+          <ContactShadows position={[1.9, -1.0, 0]} opacity={0.38} blur={2.4} scale={6} far={1.8} frames={1} />
           <ambientLight intensity={0.75} />
           <directionalLight position={[4, 6, 4]} intensity={1.6} />
           <directionalLight position={[-4, 2, -4]} intensity={0.5} color="#bcd9ff" />
