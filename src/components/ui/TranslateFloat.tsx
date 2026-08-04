@@ -62,47 +62,70 @@ export default function TranslateFloat() {
   const [loadTimedOut, setLoadTimedOut] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // ── Draggable state ───────────────────────────────────────────
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  // ── Draggable state (rAF-throttled, direct DOM transform = smooth) ──
+  const posRef = useRef({ x: 180, y: 24 });
   const dragRef = useRef<{
     sx: number;
     sy: number;
     ox: number;
     oy: number;
     moved: boolean;
+    raf: number | null;
   } | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    setPos({ x: 180, y: Math.max(24, window.innerHeight - 130) });
+    posRef.current.y = Math.max(24, window.innerHeight - 130);
+    if (rootRef.current) {
+      rootRef.current.style.left = posRef.current.x + "px";
+      rootRef.current.style.top = posRef.current.y + "px";
+    }
   }, []);
 
+  const applyPos = () => {
+    if (rootRef.current) {
+      rootRef.current.style.transform =
+        "translate3d(" + posRef.current.x + "px, " + posRef.current.y + "px, 0)";
+    }
+  };
+
   const onPointerDown = (e: React.PointerEvent) => {
-    // Only start drag from the handle/grip area — not from the clickable label
+    // Only start drag from the handle/grip area — not from button
     if ((e.target as HTMLElement).closest("button")) return;
     dragRef.current = {
       sx: e.clientX,
       sy: e.clientY,
-      ox: pos?.x ?? 180,
-      oy: pos?.y ?? 24,
+      ox: posRef.current.x,
+      oy: posRef.current.y,
       moved: false,
+      raf: null,
     };
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
     const d = dragRef.current;
-    if (!d || !pos) return;
+    if (!d) return;
     const dx = e.clientX - d.sx;
     const dy = e.clientY - d.sy;
-    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) d.moved = true;
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) d.moved = true;
     if (!d.moved) return;
-    setPos({
-      x: Math.max(8, Math.min(window.innerWidth - 210, d.ox + dx)),
-      y: Math.max(8, Math.min(window.innerHeight - 70, d.oy + dy)),
+
+    // rAF-throttle — only update DOM transform once per frame, no React re-render
+    if (d.raf !== null) return;
+    d.raf = requestAnimationFrame(() => {
+      if (!dragRef.current) return;
+      const d2 = dragRef.current;
+      posRef.current.x = Math.max(8, Math.min(window.innerWidth - 210, d2.ox + (e.clientX - d2.sx)));
+      posRef.current.y = Math.max(8, Math.min(window.innerHeight - 70, d2.oy + (e.clientY - d2.sy)));
+      applyPos();
+      d2.raf = null;
     });
   };
 
   const onPointerEnd = () => {
+    if (dragRef.current?.raf !== null && dragRef.current?.raf !== undefined) {
+      cancelAnimationFrame(dragRef.current.raf);
+    }
     dragRef.current = null;
   };
 
@@ -227,10 +250,8 @@ export default function TranslateFloat() {
 
   const currentLabel = LANGUAGES.find((l) => l.code === current)?.label ?? "English";
 
-  if (!pos) return null;
-
   return (
-    <div ref={rootRef} className="fixed z-[85] select-none" style={{ left: pos.x, top: pos.y }}>
+    <div ref={rootRef} className="fixed z-[85] select-none" style={{ left: 0, top: 0 }}>
       {/* Hidden Google translate anchor */}
       <div
         id="google_translate_element"

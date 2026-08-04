@@ -9,6 +9,7 @@ const processes = [
     icon: FlaskConical,
     step: "01",
     title: "Incoming Material Inspection",
+    image: "/assets/factory/004.webp",
     description:
       "All raw materials undergo chemical composition analysis, hardness testing, and dimensional verification against material certificates before entering production.",
   },
@@ -16,6 +17,7 @@ const processes = [
     icon: Microscope,
     step: "02",
     title: "In-Process Quality Control",
+    image: "/assets/factory/003.webp",
     description:
       "Real-time monitoring at each production stage. Statistical process control (SPC) methods track critical dimensions and identify deviations before they become defects.",
   },
@@ -23,6 +25,7 @@ const processes = [
     icon: Gauge,
     step: "03",
     title: "Performance Testing",
+    image: "/assets/factory/004.webp",
     description:
       "Functional testing of assembled components including ball joint articulation torque, bushing durometer hardness, and fatigue cycle testing for critical parts.",
   },
@@ -30,6 +33,7 @@ const processes = [
     icon: ClipboardCheck,
     step: "04",
     title: "Final Inspection & Audit",
+    image: "/assets/factory/005.webp",
     description:
       "100% visual and dimensional inspection. Random sample testing against AQL standards. Each batch receives a detailed inspection report before shipment approval.",
   },
@@ -84,6 +88,15 @@ export default function QualityPage() {
                       isEven ? "lg:text-right lg:pr-16" : "lg:col-start-2 lg:pl-16"
                     }`}
                   >
+                    {/* Process image */}
+                    <div className="mb-4 overflow-hidden rounded-2xl">
+                      <img
+                        src={proc.image}
+                        alt={proc.title}
+                        loading="lazy"
+                        className="w-full aspect-[16/9] object-cover"
+                      />
+                    </div>
                     <div className={`mb-4 ${isEven ? "lg:justify-end" : ""} flex`}>
                       <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
                         <Icon size={24} className="text-accent" />

@@ -7,7 +7,8 @@ import { getFeaturedProducts } from "@/lib/data";
 import ProductCard from "@/components/products/ProductCard";
 
 export default function ProductShowcase() {
-  const products = getFeaturedProducts();
+  // Homepage heat: only show up to 8 featured products
+  const products = getFeaturedProducts().slice(0, 8);
 
   return (
     <section className="py-20 border-t border-gray-200 section-mid">
