@@ -20,8 +20,8 @@ class CanvasErrorBoundary extends Component<{ children: ReactNode; fallback: Rea
   }
 }
 
-// Resting pose — fixed forever (position never moves). Shifted right for breathing room.
-const FIXED_POS = new Vector3(1.9, -0.3, 0);
+// Resting pose — fixed forever (position never moves). Balanced position.
+const FIXED_POS = new Vector3(1.4, -0.3, 0);
 
 function ModelGroup({
   interactable,
@@ -121,19 +121,16 @@ export default function Product3D({
   locked: boolean;
   modelPath: string;
 }) {
-  const [modelState, setModelState] = useState<"loading" | "ready" | "missing">("loading");
+  const [modelOk, setModelOk] = useState<null | boolean>(null);
 
   useEffect(() => {
-    setModelState("loading");
-    // Try fetching the GLB; useGLTF will handle actual loading inside Canvas.
-    // HEAD is dropped here to save a network round-trip.
-    const img = new Image();
-    img.src = modelPath;
-    img.onload = () => setModelState("ready");
-    img.onerror = () => setModelState("missing");
+    setModelOk(null);
+    fetch(modelPath, { method: "HEAD" })
+      .then((r) => setModelOk(r.ok))
+      .catch(() => setModelOk(false));
   }, [modelPath]);
 
-  if (modelState === "loading") {
+  if (modelOk === null) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-slate-200 border-t-accent rounded-full animate-spin" />
@@ -141,7 +138,7 @@ export default function Product3D({
     );
   }
 
-  if (modelState === "missing") {
+  if (!modelOk) {
     return (
       <div className="w-full h-full flex items-center justify-center text-sm text-[#94A3B8]">
         Model file not found — add "{modelPath.split("/").pop()}" to public/assets/models/
@@ -160,8 +157,7 @@ export default function Product3D({
       >
         <Canvas
           dpr={[0.8, 1.25]}
-          frameloop="demand"
-          camera={{ position: [3.0, 1.5, 3.8], fov: 38 }}
+          camera={{ position: [2.8, 1.5, 3.6], fov: 38 }}
           gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false }}
           onCreated={({ scene, gl }) => {
             const pmrem = new PMREMGenerator(gl);
@@ -173,7 +169,7 @@ export default function Product3D({
           <Suspense fallback={null}>
             <ModelGroup key={modelPath} interactable={!locked} modelPath={modelPath} />
           </Suspense>
-          <ContactShadows position={[1.9, -1.0, 0]} opacity={0.38} blur={2.4} scale={6} far={1.8} frames={1} />
+      <ContactShadows position={[1.4, -1.0, 0]} opacity={0.38} blur={2.4} scale={6} far={1.8} frames={1} />
           <ambientLight intensity={0.75} />
           <directionalLight position={[4, 6, 4]} intensity={1.6} />
           <directionalLight position={[-4, 2, -4]} intensity={0.5} color="#bcd9ff" />
