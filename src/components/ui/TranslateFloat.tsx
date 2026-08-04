@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, AlertTriangle } from "lucide-react";
+import { Globe, AlertTriangle, GripHorizontal } from "lucide-react";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -10,7 +10,7 @@ const LANGUAGES = [
   { code: "zh-CN", label: "中文" },
 ] as const;
 
-const spring = { type: "spring", stiffness: 260, damping: 22, mass: 0.8 } as const;
+const spring = { type: "spring", stiffness: 260, damping: 26, mass: 0.7 } as const;
 
 declare global {
   interface Window {
@@ -24,30 +24,100 @@ declare global {
   }
 }
 
+/** Remove + zero-size Google Translate banner iframe & artifacts */
+function purgeGoogleUI() {
+  try {
+    if (document.body) document.body.style.top = "0px";
+  } catch {
+    /* noop */
+  }
+  document
+    .querySelectorAll(
+      "iframe.goog-te-banner-frame, .goog-te-banner-frame, #goog-gt-tt, .goog-te-gadget, .goog-te-gadget-simple, .goog-logo-link, .goog-te-balloon-frame, .goog-te-menu-frame, .goog-te-menu2, .goog-te-gadget-icon, div[id*='goog-gt-']"
+    )
+    .forEach((el) => {
+      try {
+        (el as HTMLElement).style.setProperty("display", "none", "important");
+        (el as HTMLElement).style.setProperty("height", "0px", "important");
+        (el as HTMLElement).style.setProperty("visibility", "hidden", "important");
+      } catch {
+        /* noop */
+      }
+      // Remove banners & bubbles completely (their close button would undo translation)
+      if (
+        el.classList.contains("goog-te-banner-frame") ||
+        (el as HTMLElement).id === "goog-gt-tt" ||
+        (el as HTMLElement).id?.startsWith("goog-gt-")
+      ) {
+        el.remove();
+      }
+    });
+}
+
 export default function TranslateFloat() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState("en");
   const [loaded, setLoaded] = useState(false);
   const [scriptReady, setScriptReady] = useState(false);
   const [loadTimedOut, setLoadTimedOut] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
-  // Load Google Translate script once — with timeout fallback
+  // ── Draggable state ───────────────────────────────────────────
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const dragRef = useRef<{
+    sx: number;
+    sy: number;
+    ox: number;
+    oy: number;
+    moved: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setPos({ x: 180, y: Math.max(24, window.innerHeight - 130) });
+  }, []);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    // Only start drag from the handle/grip area — not from the clickable label
+    if ((e.target as HTMLElement).closest("button")) return;
+    dragRef.current = {
+      sx: e.clientX,
+      sy: e.clientY,
+      ox: pos?.x ?? 180,
+      oy: pos?.y ?? 24,
+      moved: false,
+    };
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    const d = dragRef.current;
+    if (!d || !pos) return;
+    const dx = e.clientX - d.sx;
+    const dy = e.clientY - d.sy;
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) d.moved = true;
+    if (!d.moved) return;
+    setPos({
+      x: Math.max(8, Math.min(window.innerWidth - 210, d.ox + dx)),
+      y: Math.max(8, Math.min(window.innerHeight - 70, d.oy + dy)),
+    });
+  };
+
+  const onPointerEnd = () => {
+    dragRef.current = null;
+  };
+
+  // ── Load Google Translate script (once) ───────────────────────
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Already loaded?
     if (document.getElementById("google-translate-script")) {
       setScriptReady(true);
       return;
     }
 
-    // 8s timeout — if Google is blocked/unreachable, show friendly error
     const timeout = setTimeout(() => {
-      if (!scriptReady) {
-        setLoadTimedOut(true);
-        setScriptReady(true); // let UI show error
-      }
+      setLoadTimedOut(true);
+      setScriptReady(true);
     }, 8000);
 
     const script = document.createElement("script");
@@ -63,21 +133,13 @@ export default function TranslateFloat() {
           {
             pageLanguage: "en",
             includedLanguages: "en,ru,zh-CN",
-            layout: 0, // SIMPLE layout
+            layout: 0,
             autoDisplay: false,
           },
           "google_translate_element"
         );
         setScriptReady(true);
-        // Clean up banner artifacts after init
-        setTimeout(() => {
-          const banner = document.querySelector(
-            ".goog-te-banner-frame"
-          ) as HTMLIFrameElement | null;
-          if (banner) banner.style.display = "none";
-          document.body.style.top = "0px";
-          // keep skiptranslate visible — required for translation
-        }, 300);
+        purgeGoogleUI();
       }
     };
 
@@ -88,55 +150,44 @@ export default function TranslateFloat() {
     };
 
     document.head.appendChild(script);
-
-    return () => {
-      clearTimeout(timeout);
-    };
+    return () => clearTimeout(timeout);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Aggressive cleanup — Google re-inserts DOM elements asynchronously after translation
-  const cleanGoogleUI = useCallback(() => {
-    // Try multiple times to catch delayed injections
-    const cleanup = () => {
-      document.body.style.top = "0px";
-      // Remove all banner frames
-      document.querySelectorAll("iframe.goog-te-banner-frame, .goog-te-banner-frame").forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-        (el as HTMLElement).setAttribute("width", "0");
-        (el as HTMLElement).setAttribute("height", "0");
-      });
-      // Collapse any remaining gadget wrappers
-      document.querySelectorAll(".goog-te-gadget, .goog-te-gadget-simple, .goog-logo-link, #goog-gt-tt").forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-      });
-      // Remove any goog-gt-* divs
-      document.querySelectorAll("div[id*='goog-gt-']").forEach((el) => {
-        (el as HTMLElement).style.display = "none";
-        (el as HTMLElement).style.height = "0";
-      });
-    };
+  // ── Continuous purge (300ms + MutationObserver) ───────────────
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-    cleanup();
-    // Google injects UI after a delay — clean again multiple times
-    setTimeout(cleanup, 200);
-    setTimeout(cleanup, 600);
-    setTimeout(cleanup, 1200);
-    setTimeout(cleanup, 2500);
+    const interval = window.setInterval(purgeGoogleUI, 300);
+    purgeGoogleUI();
+
+    let observer: MutationObserver | undefined;
+    if ("MutationObserver" in window) {
+      observer = new MutationObserver(() => purgeGoogleUI());
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style", "class", "id"],
+      });
+    }
+
+    return () => {
+      window.clearInterval(interval);
+      observer?.disconnect();
+    };
   }, []);
 
-  // Switch language via the hidden Google select
+  // ── Switch language ───────────────────────────────────────────
   const switchLang = useCallback((code: string) => {
     const googSelect = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
-
     if (googSelect) {
       googSelect.value = code;
       googSelect.dispatchEvent(new Event("change", { bubbles: true }));
       setCurrent(code);
       setOpen(false);
-      // Aggressively clean Google UI after language switch
-      cleanGoogleUI();
+      purgeGoogleUI();
+      setTimeout(purgeGoogleUI, 400);
     } else {
-      // Script not loaded yet / blocked — just set cookie so reload applies
       document.cookie =
         "googtrans=/en/" +
         (code === "en" ? "en" : code) +
@@ -146,7 +197,7 @@ export default function TranslateFloat() {
     }
   }, []);
 
-  // Detect current language on mount
+  // Detect current language
   useEffect(() => {
     if (!scriptReady || loadTimedOut) return;
     const check = setInterval(() => {
@@ -159,12 +210,10 @@ export default function TranslateFloat() {
     return () => clearInterval(check);
   }, [scriptReady, loadTimedOut]);
 
-  // Close on outside click
+  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
     };
     if (open) document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -172,15 +221,17 @@ export default function TranslateFloat() {
 
   // Animate in
   useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 1200);
+    const t = setTimeout(() => setLoaded(true), 900);
     return () => clearTimeout(t);
   }, []);
 
   const currentLabel = LANGUAGES.find((l) => l.code === current)?.label ?? "English";
 
+  if (!pos) return null;
+
   return (
-    <div ref={containerRef} className="relative">
-      {/* Hidden Google translate anchor — required by widget, must stay in DOM */}
+    <div ref={rootRef} className="fixed z-[85] select-none" style={{ left: pos.x, top: pos.y }}>
+      {/* Hidden Google translate anchor */}
       <div
         id="google_translate_element"
         className="absolute opacity-0 pointer-events-none"
@@ -191,105 +242,127 @@ export default function TranslateFloat() {
         initial={{ opacity: 0, y: 12 }}
         animate={loaded ? { opacity: 1, y: 0 } : {}}
         transition={spring}
-        className="relative"
       >
-        {/* Translate toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          aria-label="Translate website"
-          className="group flex items-center gap-2 pl-4 pr-5 py-2.5 rounded-2xl backdrop-blur-2xl transition-all duration-300 hover:scale-[1.04] active:scale-95"
-          style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,255,255,0.4))",
-            border: "1px solid rgba(255,255,255,0.6)",
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 20px rgba(0,0,0,0.08)",
-          }}
-        >
-          <div className="w-8 h-8 rounded-full bg-white/60 border border-white/70 flex items-center justify-center">
-            {loadTimedOut ? (
-              <AlertTriangle size={14} className="text-amber-500" />
-            ) : (
-              <Globe size={14} className="text-[#475569]" />
-            )}
-          </div>
-          <span className="hidden sm:inline text-[11px] font-semibold text-[#475569]">
-            {loadTimedOut ? "Translate" : currentLabel}
-          </span>
-        </button>
+        <div className="relative">
+          {/* Floating pill: drag handle + label */}
+          <div
+            className="flex items-center gap-1.5 pl-1 pr-1 py-1 rounded-full backdrop-blur-2xl shadow-lg"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.5))",
+              border: "1px solid rgba(255,255,255,0.7)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 22px rgba(0,0,0,0.1)",
+            }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerEnd}
+            onPointerCancel={onPointerEnd}
+          >
+            {/* Drag grip */}
+            <span className="p-1 cursor-grab active:cursor-grabbing">
+              <GripHorizontal size={13} className="text-[#94A3B8]" />
+            </span>
 
-        {/* Dropdown */}
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: -6 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: -4 }}
-              transition={spring}
-              className="absolute bottom-full right-0 mb-2 min-w-[140px] py-1.5 backdrop-blur-2xl rounded-2xl border border-white/60"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.5))",
-                boxShadow:
-                  "inset 0 1px 0 rgba(255,255,255,0.8), 0 8px 32px rgba(0,0,0,0.12)",
+            {/* Clickable translate toggle */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpen(!open);
               }}
+              aria-label="Translate website"
+              className="flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full hover:bg-black/[0.03] transition-colors"
             >
-              {loadTimedOut ? (
-                <p className="px-4 py-2 text-[11px] text-amber-600">
-                  Translation service is currently unreachable. Please try again later or use a VPN.
-                </p>
-              ) : (
-                LANGUAGES.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => switchLang(lang.code)}
-                    className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors ${
-                      current === lang.code
-                        ? "text-accent bg-red-50/60"
-                        : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.04]"
-                    }`}
-                  >
-                    {lang.label}
-                  </button>
-                ))
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <span className="w-7 h-7 rounded-full bg-white/80 border border-white/90 flex items-center justify-center">
+                {loadTimedOut ? (
+                  <AlertTriangle size={13} className="text-amber-500" />
+                ) : (
+                  <Globe size={13} className="text-[#475569]" />
+                )}
+              </span>
+              <span className="text-[11px] font-semibold text-[#475569]">
+                {loadTimedOut ? "Translate" : currentLabel}
+              </span>
+              <span
+                className={`text-[8px] text-[#94A3B8] transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+              >
+                ▼
+              </span>
+            </button>
+          </div>
+
+          {/* Dropdown */}
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: -6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: -4 }}
+                transition={spring}
+                className="absolute bottom-full left-0 mb-2 min-w-[150px] py-1.5 backdrop-blur-2xl rounded-2xl border border-white/60"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6))",
+                  boxShadow:
+                    "inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 32px rgba(0,0,0,0.12)",
+                }}
+              >
+                {loadTimedOut ? (
+                  <p className="px-4 py-2 text-[11px] text-amber-600">
+                    Translation service unreachable. Try later or use a VPN.
+                  </p>
+                ) : (
+                  LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => switchLang(lang.code)}
+                      className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors ${
+                        current === lang.code
+                          ? "text-accent bg-red-50/60"
+                          : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.04]"
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
 
-      {/* Hide Google Translate UI artifacts aggressively */}
+      {/* CSS — force banner to zero size unconditionally */}
       <style>{`
-        /* Banner & frames */
         .goog-te-banner-frame,
-        .goog-te-banner-frame *,
-        iframe.goog-te-banner-frame { display: none !important; width: 0 !important; height: 0 !important; }
-        /* Gadget & branding */
+        iframe.goog-te-banner-frame {
+          display: none !important;
+          height: 0 !important;
+          width: 0 !important;
+          visibility: hidden !important;
+        }
         .goog-te-gadget,
         .goog-te-gadget *,
         .goog-logo-link,
-        .goog-logo-link * { display: none !important; }
-        /* Tooltip / balloon */
         #goog-gt-tt,
         .goog-te-balloon-frame,
-        .goog-te-balloon-frame * { display: none !important; }
-        /* Menu frames */
         .goog-te-menu-frame,
-        .goog-te-menu2 { display: none !important; }
-        /* Status bar / inline gadget */
-        .goog-te-gadget-icon { display: none !important; }
-        .goog-te-gadget-simple { display: none !important; }
-        .goog-te-gadget .goog-te-gadget-simple { display: none !important; }
-        /* Any remaining Google overlaid elements */
-        div[id*="goog-gt-"] { display: none !important; height: 0 !important; }
-        /* Keep the select functional but visually hidden */
+        .goog-te-menu2,
+        div[id*="goog-gt-"] {
+          display: none !important;
+          visibility: hidden !important;
+          height: 0 !important;
+        }
         .goog-te-combo {
           opacity: 0 !important;
           position: absolute !important;
           pointer-events: none !important;
+          height: 0 !important;
+          width: 0 !important;
         }
-        /* Force body to NOT shift for banner */
-        body { top: 0px !important; position: relative !important; }
+        body {
+          top: 0px !important;
+          position: relative !important;
+        }
       `}</style>
     </div>
   );

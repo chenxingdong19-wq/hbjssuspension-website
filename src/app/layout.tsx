@@ -37,9 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
-        <div className="fixed bottom-6 left-44 z-[89] flex flex-col items-end gap-3">
-          <TranslateFloat />
-        </div>
+        <TranslateFloat />
         <ContactFloat />
 
         {/* Tawk.to — live chat, hidden default bubble (custom button opens it) */}

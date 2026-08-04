@@ -1,5 +1,5 @@
 {
-  "oem": "54500-1X000 54501-1X000",
+  "oem": "54500-S8100 54501-S8100",
   "vehicle": "Hyundai KIA",
   "material": "Forged Steel",
   "surface": "Electrophoretic Coating + Powder Coating",
@@ -7,5 +7,5 @@
   "packaging": "Single foam bag packaging, 6 pieces per carton; paper dividers included inside the carton.",
   "description": "Designed for automotive front suspension systems, this forged steel lower control arm provides reliable support and stable handling performance. Manufactured with precision CNC machining and robotic welding, it delivers excellent durability, precise geometry, and long service life. Multi-layer corrosion protection ensures consistent performance across diverse operating environments.",
   "featured": true,
-  "displayName": "Lower Control Arm"
+  "displayName": "Control Arm"
 }
