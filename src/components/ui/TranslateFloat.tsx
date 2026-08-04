@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, AlertTriangle, GripHorizontal } from "lucide-react";
+import { Globe, AlertTriangle } from "lucide-react";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -10,7 +10,7 @@ const LANGUAGES = [
   { code: "zh-CN", label: "中文" },
 ] as const;
 
-const spring = { type: "spring", stiffness: 260, damping: 26, mass: 0.7 } as const;
+const spring = { type: "spring", stiffness: 300, damping: 24, mass: 0.7 } as const;
 
 declare global {
   interface Window {
@@ -43,7 +43,6 @@ function purgeGoogleUI() {
       } catch {
         /* noop */
       }
-      // Remove banners & bubbles completely (their close button would undo translation)
       if (
         el.classList.contains("goog-te-banner-frame") ||
         (el as HTMLElement).id === "goog-gt-tt" ||
@@ -60,79 +59,11 @@ export default function TranslateFloat() {
   const [loaded, setLoaded] = useState(false);
   const [scriptReady, setScriptReady] = useState(false);
   const [loadTimedOut, setLoadTimedOut] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-  // ── Draggable state (rAF-throttled, direct DOM transform = smooth) ──
-  const posRef = useRef({ x: 180, y: 24 });
-  const dragRef = useRef<{
-    sx: number;
-    sy: number;
-    ox: number;
-    oy: number;
-    moved: boolean;
-    raf: number | null;
-  } | null>(null);
-
+  // Load Google Translate script once
   useEffect(() => {
     if (typeof window === "undefined") return;
-    posRef.current.y = Math.max(24, window.innerHeight - 130);
-    if (rootRef.current) {
-      rootRef.current.style.left = posRef.current.x + "px";
-      rootRef.current.style.top = posRef.current.y + "px";
-    }
-  }, []);
-
-  const applyPos = () => {
-    if (rootRef.current) {
-      rootRef.current.style.transform =
-        "translate3d(" + posRef.current.x + "px, " + posRef.current.y + "px, 0)";
-    }
-  };
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    // Only start drag from the handle/grip area — not from button
-    if ((e.target as HTMLElement).closest("button")) return;
-    dragRef.current = {
-      sx: e.clientX,
-      sy: e.clientY,
-      ox: posRef.current.x,
-      oy: posRef.current.y,
-      moved: false,
-      raf: null,
-    };
-  };
-
-  const onPointerMove = (e: React.PointerEvent) => {
-    const d = dragRef.current;
-    if (!d) return;
-    const dx = e.clientX - d.sx;
-    const dy = e.clientY - d.sy;
-    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) d.moved = true;
-    if (!d.moved) return;
-
-    // rAF-throttle — only update DOM transform once per frame, no React re-render
-    if (d.raf !== null) return;
-    d.raf = requestAnimationFrame(() => {
-      if (!dragRef.current) return;
-      const d2 = dragRef.current;
-      posRef.current.x = Math.max(8, Math.min(window.innerWidth - 210, d2.ox + (e.clientX - d2.sx)));
-      posRef.current.y = Math.max(8, Math.min(window.innerHeight - 70, d2.oy + (e.clientY - d2.sy)));
-      applyPos();
-      d2.raf = null;
-    });
-  };
-
-  const onPointerEnd = () => {
-    if (dragRef.current?.raf !== null && dragRef.current?.raf !== undefined) {
-      cancelAnimationFrame(dragRef.current.raf);
-    }
-    dragRef.current = null;
-  };
-
-  // ── Load Google Translate script (once) ───────────────────────
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
     if (document.getElementById("google-translate-script")) {
       setScriptReady(true);
       return;
@@ -176,13 +107,11 @@ export default function TranslateFloat() {
     return () => clearTimeout(timeout);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Continuous purge (300ms + MutationObserver) ───────────────
+  // Continuous purge
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    const interval = window.setInterval(purgeGoogleUI, 300);
+    const interval = window.setInterval(purgeGoogleUI, 400);
     purgeGoogleUI();
-
     let observer: MutationObserver | undefined;
     if ("MutationObserver" in window) {
       observer = new MutationObserver(() => purgeGoogleUI());
@@ -193,14 +122,12 @@ export default function TranslateFloat() {
         attributeFilter: ["style", "class", "id"],
       });
     }
-
     return () => {
       window.clearInterval(interval);
       observer?.disconnect();
     };
   }, []);
 
-  // ── Switch language ───────────────────────────────────────────
   const switchLang = useCallback((code: string) => {
     const googSelect = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
     if (googSelect) {
@@ -236,7 +163,7 @@ export default function TranslateFloat() {
   // Close dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
     if (open) document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -244,14 +171,18 @@ export default function TranslateFloat() {
 
   // Animate in
   useEffect(() => {
-    const t = setTimeout(() => setLoaded(true), 900);
+    const t = setTimeout(() => setLoaded(true), 1000);
     return () => clearTimeout(t);
   }, []);
 
   const currentLabel = LANGUAGES.find((l) => l.code === current)?.label ?? "English";
 
   return (
-    <div ref={rootRef} className="fixed z-[85] select-none" style={{ left: 0, top: 0 }}>
+    <div
+      ref={ref}
+      className="fixed right-4 z-[85] select-none"
+      style={{ top: "50%", transform: "translateY(-50%)" }}
+    >
       {/* Hidden Google translate anchor */}
       <div
         id="google_translate_element"
@@ -260,75 +191,54 @@ export default function TranslateFloat() {
       />
 
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={loaded ? { opacity: 1, y: 0 } : {}}
+        initial={{ opacity: 0, x: 14 }}
+        animate={loaded ? { opacity: 1, x: 0 } : {}}
         transition={spring}
       >
-        <div className="relative">
-          {/* Floating pill: drag handle + label */}
-          <div
-            className="flex items-center gap-1.5 pl-1 pr-1 py-1 rounded-full backdrop-blur-2xl shadow-lg"
+        <div className="relative flex flex-col items-center">
+          {/* Globe button — opens menu */}
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label="Translate website"
+            className="w-11 h-11 flex items-center justify-center rounded-full backdrop-blur-2xl transition-all duration-300 hover:scale-105 active:scale-95"
             style={{
               background:
                 "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(255,255,255,0.5))",
               border: "1px solid rgba(255,255,255,0.7)",
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 22px rgba(0,0,0,0.1)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 22px rgba(0,0,0,0.12)",
             }}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerEnd}
-            onPointerCancel={onPointerEnd}
           >
-            {/* Drag grip */}
-            <span className="p-1 cursor-grab active:cursor-grabbing">
-              <GripHorizontal size={13} className="text-[#94A3B8]" />
-            </span>
+            {loadTimedOut ? (
+              <AlertTriangle size={17} className="text-amber-500" />
+            ) : (
+              <Globe size={17} className="text-[#475569]" />
+            )}
+          </button>
 
-            {/* Clickable translate toggle */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpen(!open);
-              }}
-              aria-label="Translate website"
-              className="flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full hover:bg-black/[0.03] transition-colors"
-            >
-              <span className="w-7 h-7 rounded-full bg-white/80 border border-white/90 flex items-center justify-center">
-                {loadTimedOut ? (
-                  <AlertTriangle size={13} className="text-amber-500" />
-                ) : (
-                  <Globe size={13} className="text-[#475569]" />
-                )}
-              </span>
-              <span className="text-[11px] font-semibold text-[#475569]">
-                {loadTimedOut ? "Translate" : currentLabel}
-              </span>
-              <span
-                className={`text-[8px] text-[#94A3B8] transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-              >
-                ▼
-              </span>
-            </button>
-          </div>
+          {/* Tiny current-lang label under button */}
+          <span className="mt-1 text-[9px] font-semibold text-[#94A3B8] tracking-wide">
+            {loadTimedOut ? "TRANS" : currentLabel.split("-")[0]}
+          </span>
 
           {/* Dropdown */}
           <AnimatePresence>
             {open && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: -6 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.92, y: -4 }}
+                initial={{ opacity: 0, scale: 0.9, x: -6 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.92, x: -4 }}
                 transition={spring}
-                className="absolute bottom-full left-0 mb-2 min-w-[150px] py-1.5 backdrop-blur-2xl rounded-2xl border border-white/60"
+                className="absolute right-full mr-3 top-0 min-w-[140px] py-1.5 backdrop-blur-2xl rounded-2xl border border-white/60"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6))",
+                    "linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.62))",
                   boxShadow:
-                    "inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 32px rgba(0,0,0,0.12)",
+                    "inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 32px rgba(0,0,0,0.14)",
                 }}
               >
                 {loadTimedOut ? (
-                  <p className="px-4 py-2 text-[11px] text-amber-600">
+                  <p className="px-4 py-2 text-[11px] text-amber-600 max-w-[170px]">
                     Translation service unreachable. Try later or use a VPN.
                   </p>
                 ) : (
@@ -352,7 +262,7 @@ export default function TranslateFloat() {
         </div>
       </motion.div>
 
-      {/* CSS — force banner to zero size unconditionally */}
+      {/* CSS — force Google banner to zero size */}
       <style>{`
         .goog-te-banner-frame,
         iframe.goog-te-banner-frame {
