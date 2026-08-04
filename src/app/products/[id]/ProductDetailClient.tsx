@@ -72,7 +72,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
               {product.oem && (
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-medium text-slate-400">OEM:</span>
-                  <code className="text-sm font-mono text-accent bg-red-50 px-2 py-0.5 rounded">
+                  <code className="notranslate text-sm font-mono text-accent bg-red-50 px-2 py-0.5 rounded">
                     {product.oem}
                   </code>
                 </div>
@@ -85,7 +85,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 {product.oem && (
                   <div>
                     <h3 className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">OEM Number</h3>
-                    <p className="text-sm font-mono text-accent">{product.oem}</p>
+                    <p className="notranslate text-sm font-mono text-accent">{product.oem}</p>
                   </div>
                 )}
                 {product.vehicle && (

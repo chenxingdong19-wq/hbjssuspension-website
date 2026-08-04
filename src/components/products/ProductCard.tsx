@@ -78,7 +78,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             {/* OEM code badge */}
             {product.oem && (
               <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-[10px] font-mono px-2 py-1 rounded bg-white/80 text-[#475569] border border-gray-200 backdrop-blur-sm">
+                <span className="notranslate text-[10px] font-mono px-2 py-1 rounded bg-white/80 text-[#475569] border border-gray-200 backdrop-blur-sm">
                   {product.oem}
                 </span>
               </div>

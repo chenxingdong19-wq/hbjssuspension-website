@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import ContactFloat from "@/components/ui/ContactFloat";
+import TranslateFloat from "@/components/ui/TranslateFloat";
 import companyData from "../../data/company.json";
 import "./globals.css";
 
@@ -36,6 +37,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <div className="fixed bottom-6 left-44 z-[89] flex flex-col items-end gap-3">
+          <TranslateFloat />
+        </div>
         <ContactFloat />
 
         {/* Tawk.to — live chat, hidden default bubble (custom button opens it) */}
