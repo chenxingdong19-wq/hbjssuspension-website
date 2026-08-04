@@ -131,6 +131,24 @@ export default function Product3D({
       .catch(() => setModelOk(false));
   }, [modelPath]);
 
+  if (modelOk === false) {
+    // Model file does not exist — avoid rendering Canvas entirely so useGLTF
+    // never tries to load a 404 url (which would crash the 3D scene).
+    return (
+      <div className="w-full h-full flex items-center justify-center text-sm text-[#94A3B8]">
+        Model file not found — add "{modelPath.split("/").pop()}" to public/assets/models/
+      </div>
+    );
+  }
+
+  if (modelOk === null) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-slate-200 border-t-accent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   if (modelOk === null) {
     return (
       <div className="w-full h-full flex items-center justify-center">
