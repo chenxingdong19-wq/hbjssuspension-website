@@ -43,7 +43,7 @@ export default function QualitySection() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="relative">
             <div className="glass-card p-8">
               <div className="aspect-[3/2] bg-white rounded-md flex items-center justify-center mb-6">
-                <img src="/assets/certificates/01.webp" alt="Certified Quality System" className="w-full h-full object-contain p-4" />
+                <img src="/assets/certificates/01.jpg" alt="Certified Quality System" className="w-full h-full object-contain p-4" />
               </div>
               <div className="text-center">
                 <h3 className="text-lg font-semibold text-[#0F172A]">Certified Quality System</h3>
