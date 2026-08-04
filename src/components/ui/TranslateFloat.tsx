@@ -94,6 +94,36 @@ export default function TranslateFloat() {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Aggressive cleanup — Google re-inserts DOM elements asynchronously after translation
+  const cleanGoogleUI = useCallback(() => {
+    // Try multiple times to catch delayed injections
+    const cleanup = () => {
+      document.body.style.top = "0px";
+      // Remove all banner frames
+      document.querySelectorAll("iframe.goog-te-banner-frame, .goog-te-banner-frame").forEach((el) => {
+        (el as HTMLElement).style.display = "none";
+        (el as HTMLElement).setAttribute("width", "0");
+        (el as HTMLElement).setAttribute("height", "0");
+      });
+      // Collapse any remaining gadget wrappers
+      document.querySelectorAll(".goog-te-gadget, .goog-te-gadget-simple, .goog-logo-link, #goog-gt-tt").forEach((el) => {
+        (el as HTMLElement).style.display = "none";
+      });
+      // Remove any goog-gt-* divs
+      document.querySelectorAll("div[id*='goog-gt-']").forEach((el) => {
+        (el as HTMLElement).style.display = "none";
+        (el as HTMLElement).style.height = "0";
+      });
+    };
+
+    cleanup();
+    // Google injects UI after a delay — clean again multiple times
+    setTimeout(cleanup, 200);
+    setTimeout(cleanup, 600);
+    setTimeout(cleanup, 1200);
+    setTimeout(cleanup, 2500);
+  }, []);
+
   // Switch language via the hidden Google select
   const switchLang = useCallback((code: string) => {
     const googSelect = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
@@ -103,6 +133,8 @@ export default function TranslateFloat() {
       googSelect.dispatchEvent(new Event("change", { bubbles: true }));
       setCurrent(code);
       setOpen(false);
+      // Aggressively clean Google UI after language switch
+      cleanGoogleUI();
     } else {
       // Script not loaded yet / blocked — just set cookie so reload applies
       document.cookie =
@@ -226,23 +258,38 @@ export default function TranslateFloat() {
         </AnimatePresence>
       </motion.div>
 
-      {/* Style overrides — hide Google UI but keep functional elements alive */}
+      {/* Hide Google Translate UI artifacts aggressively */}
       <style>{`
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0px !important; }
-        .goog-logo-link { display: none !important; }
-        .goog-te-gadget { display: none !important; }
-        #goog-gt-tt { display: none !important; }
-        .goog-te-balloon-frame { display: none !important; }
-        .goog-te-menu-frame { display: none !important; }
+        /* Banner & frames */
+        .goog-te-banner-frame,
+        .goog-te-banner-frame *,
+        iframe.goog-te-banner-frame { display: none !important; width: 0 !important; height: 0 !important; }
+        /* Gadget & branding */
+        .goog-te-gadget,
+        .goog-te-gadget *,
+        .goog-logo-link,
+        .goog-logo-link * { display: none !important; }
+        /* Tooltip / balloon */
+        #goog-gt-tt,
+        .goog-te-balloon-frame,
+        .goog-te-balloon-frame * { display: none !important; }
+        /* Menu frames */
+        .goog-te-menu-frame,
         .goog-te-menu2 { display: none !important; }
-        /* Keep the select functional but visually hidden — change event still works */
+        /* Status bar / inline gadget */
+        .goog-te-gadget-icon { display: none !important; }
+        .goog-te-gadget-simple { display: none !important; }
+        .goog-te-gadget .goog-te-gadget-simple { display: none !important; }
+        /* Any remaining Google overlaid elements */
+        div[id*="goog-gt-"] { display: none !important; height: 0 !important; }
+        /* Keep the select functional but visually hidden */
         .goog-te-combo {
           opacity: 0 !important;
           position: absolute !important;
           pointer-events: none !important;
         }
-        /* DO NOT hide skiptranslate — Google needs it for content wrapping */
+        /* Force body to NOT shift for banner */
+        body { top: 0px !important; position: relative !important; }
       `}</style>
     </div>
   );
