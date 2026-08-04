@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe } from "lucide-react";
+import { Globe, AlertTriangle } from "lucide-react";
 
 const LANGUAGES = [
   { code: "en", label: "English" },
@@ -14,10 +14,10 @@ const spring = { type: "spring", stiffness: 260, damping: 22, mass: 0.8 } as con
 
 declare global {
   interface Window {
-    google: {
-      translate: {
-        TranslateElement: new (opts: Record<string, unknown>, el: string) => unknown;
-        InlineLayout: { SIMPLE: number };
+    google?: {
+      translate?: {
+        TranslateElement?: new (opts: Record<string, unknown>, el: string) => unknown;
+        InlineLayout?: { SIMPLE: number };
       };
     };
     googleTranslateElementInit?: () => void;
@@ -29,119 +29,103 @@ export default function TranslateFloat() {
   const [current, setCurrent] = useState("en");
   const [loaded, setLoaded] = useState(false);
   const [scriptReady, setScriptReady] = useState(false);
+  const [loadTimedOut, setLoadTimedOut] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Load Google Translate script once
+  // Load Google Translate script once — with timeout fallback
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const existing = document.getElementById("google-translate-script");
-    if (existing) {
+
+    // Already loaded?
+    if (document.getElementById("google-translate-script")) {
       setScriptReady(true);
       return;
     }
 
+    // 8s timeout — if Google is blocked/unreachable, show friendly error
+    const timeout = setTimeout(() => {
+      if (!scriptReady) {
+        setLoadTimedOut(true);
+        setScriptReady(true); // let UI show error
+      }
+    }, 8000);
+
     const script = document.createElement("script");
     script.id = "google-translate-script";
-    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.src =
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     script.async = true;
 
     window.googleTranslateElementInit = () => {
-      // Hide the default Google translate dropdown completely
-      const hideBanner = () => {
-        const banner = document.querySelector(".goog-te-banner-frame") as HTMLIFrameElement | null;
-        if (banner) banner.style.display = "none";
-        const body = document.body;
-        if (body) {
-          body.style.top = "0px";
-          // Hide google top bar artifacts
-          const skipto = document.getElementById(":1.targetLanguage") as HTMLElement | null;
-          if (skipto) skipto.style.display = "none";
-          // Also hide the popup frame that sometimes appears
-          const frames = document.querySelectorAll("iframe.goog-te-menu-frame");
-          frames.forEach((f) => ((f as HTMLElement).style.display = "none"));
-        }
-      };
-
-      if (window.google?.translate) {
+      clearTimeout(timeout);
+      if (window.google?.translate?.TranslateElement) {
         new window.google.translate.TranslateElement(
           {
             pageLanguage: "en",
             includedLanguages: "en,ru,zh-CN",
-            layout: window.google.translate.InlineLayout.SIMPLE,
+            layout: 0, // SIMPLE layout
             autoDisplay: false,
           },
           "google_translate_element"
         );
         setScriptReady(true);
-        // Try hiding banner immediately after init
-        setTimeout(hideBanner, 200);
+        // Clean up banner artifacts after init
+        setTimeout(() => {
+          const banner = document.querySelector(
+            ".goog-te-banner-frame"
+          ) as HTMLIFrameElement | null;
+          if (banner) banner.style.display = "none";
+          document.body.style.top = "0px";
+          // keep skiptranslate visible — required for translation
+        }, 300);
       }
+    };
+
+    script.onerror = () => {
+      clearTimeout(timeout);
+      setLoadTimedOut(true);
+      setScriptReady(true);
     };
 
     document.head.appendChild(script);
 
     return () => {
-      // Don't remove the script on unmount — it's global
+      clearTimeout(timeout);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Switch language via the hidden Google select
-  const switchLang = useCallback(
-    (code: string) => {
-      if (code === "en") {
-        // Reset to original english: simulate clicking the "original" option
-        const googSelect = document.querySelector(
-          ".goog-te-combo"
-        ) as HTMLSelectElement | null;
-        if (googSelect) {
-          googSelect.value = "en";
-          googSelect.dispatchEvent(new Event("change", { bubbles: true }));
-          // Also try removing the translated class from body
-          setTimeout(() => {
-            document.body.classList.remove("translated-ltr", "translated-rtl");
-          }, 100);
-        } else {
-          // Reload with no translation: set cookie to en
-          document.cookie = "googtrans=/en/en;path=/;domain=" + window.location.hostname;
-          window.location.reload();
-          return;
-        }
-      } else {
-        const googSelect = document.querySelector(
-          ".goog-te-combo"
-        ) as HTMLSelectElement | null;
-        if (googSelect) {
-          googSelect.value = code;
-          googSelect.dispatchEvent(new Event("change", { bubbles: true }));
-        } else {
-          // Fallback: set cookie and reload
-          document.cookie =
-            "googtrans=/en/" + code + ";path=/;domain=" + window.location.hostname;
-          window.location.reload();
-          return;
-        }
-      }
+  const switchLang = useCallback((code: string) => {
+    const googSelect = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
+
+    if (googSelect) {
+      googSelect.value = code;
+      googSelect.dispatchEvent(new Event("change", { bubbles: true }));
       setCurrent(code);
       setOpen(false);
-    },
-    []
-  );
+    } else {
+      // Script not loaded yet / blocked — just set cookie so reload applies
+      document.cookie =
+        "googtrans=/en/" +
+        (code === "en" ? "en" : code) +
+        ";path=/;domain=" +
+        window.location.hostname;
+      window.location.reload();
+    }
+  }, []);
 
-  // Auto-detect current language from URL or cookie (for returning visits)
+  // Detect current language on mount
   useEffect(() => {
-    if (!scriptReady) return;
-    // Check if already translated on page load
-    const checkLang = setInterval(() => {
-      const googSelect = document.querySelector(
-        ".goog-te-combo"
-      ) as HTMLSelectElement | null;
-      if (googSelect && googSelect.value) {
-        setCurrent(googSelect.value === "en" ? "en" : googSelect.value);
-        clearInterval(checkLang);
+    if (!scriptReady || loadTimedOut) return;
+    const check = setInterval(() => {
+      const sel = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
+      if (sel?.value) {
+        setCurrent(sel.value);
+        clearInterval(check);
       }
     }, 200);
-    return () => clearInterval(checkLang);
-  }, [scriptReady]);
+    return () => clearInterval(check);
+  }, [scriptReady, loadTimedOut]);
 
   // Close on outside click
   useEffect(() => {
@@ -150,23 +134,21 @@ export default function TranslateFloat() {
         setOpen(false);
       }
     };
-    if (open) {
-      document.addEventListener("mousedown", handler);
-    }
+    if (open) document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Animate in on mount
+  // Animate in
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 1200);
     return () => clearTimeout(t);
   }, []);
 
-  const currentLabel = LANGUAGES.find((l) => l.code === current)?.label || "English";
+  const currentLabel = LANGUAGES.find((l) => l.code === current)?.label ?? "English";
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Hidden Google translate container — required by the widget, never visible */}
+      {/* Hidden Google translate anchor — required by widget, must stay in DOM */}
       <div
         id="google_translate_element"
         className="absolute opacity-0 pointer-events-none"
@@ -179,7 +161,7 @@ export default function TranslateFloat() {
         transition={spring}
         className="relative"
       >
-        {/* Toggle button */}
+        {/* Translate toggle */}
         <button
           onClick={() => setOpen(!open)}
           aria-label="Translate website"
@@ -193,10 +175,14 @@ export default function TranslateFloat() {
           }}
         >
           <div className="w-8 h-8 rounded-full bg-white/60 border border-white/70 flex items-center justify-center">
-            <Globe size={14} className="text-[#475569]" />
+            {loadTimedOut ? (
+              <AlertTriangle size={14} className="text-amber-500" />
+            ) : (
+              <Globe size={14} className="text-[#475569]" />
+            )}
           </div>
           <span className="hidden sm:inline text-[11px] font-semibold text-[#475569]">
-            {currentLabel}
+            {loadTimedOut ? "Translate" : currentLabel}
           </span>
         </button>
 
@@ -216,25 +202,31 @@ export default function TranslateFloat() {
                   "inset 0 1px 0 rgba(255,255,255,0.8), 0 8px 32px rgba(0,0,0,0.12)",
               }}
             >
-              {LANGUAGES.map((lang) => (
-                <button
-                  key={lang.code}
-                  onClick={() => switchLang(lang.code)}
-                  className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors ${
-                    current === lang.code
-                      ? "text-accent bg-red-50/60"
-                      : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.04]"
-                  }`}
-                >
-                  {lang.label}
-                </button>
-              ))}
+              {loadTimedOut ? (
+                <p className="px-4 py-2 text-[11px] text-amber-600">
+                  Translation service is currently unreachable. Please try again later or use a VPN.
+                </p>
+              ) : (
+                LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => switchLang(lang.code)}
+                    className={`w-full text-left px-4 py-2 text-xs font-medium transition-colors ${
+                      current === lang.code
+                        ? "text-accent bg-red-50/60"
+                        : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.04]"
+                    }`}
+                  >
+                    {lang.label}
+                  </button>
+                ))
+              )}
             </motion.div>
           )}
         </AnimatePresence>
       </motion.div>
 
-      {/* Style overrides — hide Google's default UI artifacts */}
+      {/* Style overrides — hide Google UI but keep functional elements alive */}
       <style>{`
         .goog-te-banner-frame { display: none !important; }
         body { top: 0px !important; }
@@ -244,10 +236,13 @@ export default function TranslateFloat() {
         .goog-te-balloon-frame { display: none !important; }
         .goog-te-menu-frame { display: none !important; }
         .goog-te-menu2 { display: none !important; }
-        .goog-te-combo { display: none !important; }
-        .skiptranslate { display: none !important; }
-        /* Keep our content visible */
-        .notranslate { }
+        /* Keep the select functional but visually hidden — change event still works */
+        .goog-te-combo {
+          opacity: 0 !important;
+          position: absolute !important;
+          pointer-events: none !important;
+        }
+        /* DO NOT hide skiptranslate — Google needs it for content wrapping */
       `}</style>
     </div>
   );
