@@ -52,17 +52,17 @@ export default function ProductGallery({ images, name }: { images: string[]; nam
             </motion.div>
           </AnimatePresence>
 
-          {/* Zoom hint */}
-          <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+          {/* Zoom hint — visible on mobile, hover-reveal on desktop */}
+          <div className="absolute top-4 right-4 z-10 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
             <div className="w-8 h-8 rounded-md glass-card flex items-center justify-center">
               <ZoomIn size={16} className="text-slate-500" />
             </div>
           </div>
 
-          {/* Arrows — always visible */}
+          {/* Arrows — always visible on mobile, hover-reveal on desktop */}
           <button
             onClick={prev}
-            className={`absolute left-3 top-1/2 -translate-y-1/2 z-10 transition-all duration-200 ${btnClass} ${isSingle ? "opacity-30 cursor-default pointer-events-none" : "opacity-0 group-hover:opacity-100"}`}
+            className={`absolute left-3 top-1/2 -translate-y-1/2 z-10 transition-all duration-200 ${btnClass} ${isSingle ? "opacity-30 cursor-default pointer-events-none" : "md:opacity-0 md:group-hover:opacity-100"}`}
             disabled={isSingle}
             aria-label="Previous image"
           >
@@ -70,7 +70,7 @@ export default function ProductGallery({ images, name }: { images: string[]; nam
           </button>
           <button
             onClick={next}
-            className={`absolute right-3 top-1/2 -translate-y-1/2 z-10 transition-all duration-200 ${btnClass} ${isSingle ? "opacity-30 cursor-default pointer-events-none" : "opacity-0 group-hover:opacity-100"}`}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 z-10 transition-all duration-200 ${btnClass} ${isSingle ? "opacity-30 cursor-default pointer-events-none" : "md:opacity-0 md:group-hover:opacity-100"}`}
             disabled={isSingle}
             aria-label="Next image"
           >
@@ -100,6 +100,7 @@ export default function ProductGallery({ images, name }: { images: string[]; nam
               <img
                 src={img}
                 alt={`${name} thumb ${i + 1}`}
+                loading="lazy"
                 className="w-full h-full object-contain bg-[#F0F3F8] p-2"
               />
             </button>

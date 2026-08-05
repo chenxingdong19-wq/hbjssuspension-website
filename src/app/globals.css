@@ -330,3 +330,50 @@ input::placeholder,textarea::placeholder { color: #94A3B8 !important; }
     animation: none !important;
   }
 }
+
+/* ========== Mobile Performance (max-width: 768px) ==========
+   Desktop stays pixel-identical. Phones get reduced GPU/CPU load:
+   - stop infinite fixed background light animations
+   - lower heavy backdrop-blur on glass surfaces
+   - keep entrance animations & gentle floating for premium feel
+   ============================================================= */
+@media (max-width: 768px) {
+  /* Stop infinite ambient background drift (large fixed gradient repaint) */
+  .bg-ambient::before {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  /* Stop hero glow sweep */
+  .section-hero::before {
+    animation: none !important;
+    opacity: 0.6;
+  }
+
+  /* Reduce glass blur cost on phones while keeping the frosted look */
+  .glass-card {
+    backdrop-filter: blur(12px) saturate(1.5) brightness(1.02);
+    -webkit-backdrop-filter: blur(12px) saturate(1.5) brightness(1.02);
+  }
+
+  /* Navbar & dropdown glass — lighter blur for scroll performance */
+  .navbar-scrolled {
+    backdrop-filter: blur(18px) saturate(1.5) brightness(1.05);
+    -webkit-backdrop-filter: blur(18px) saturate(1.5) brightness(1.05);
+  }
+  .dropdown-menu {
+    backdrop-filter: blur(14px) saturate(1.5) brightness(1.03);
+    -webkit-backdrop-filter: blur(14px) saturate(1.5) brightness(1.03);
+  }
+
+  /* Lightbox / overlays — keep blur but lighter */
+  input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* Hover-only sheen/light effects are meaningless on touch — disable sweep keyframes */
+  .product-card-shine .light-sweep {
+    animation: none !important;
+  }
+}

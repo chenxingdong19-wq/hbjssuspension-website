@@ -3,7 +3,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform, type Variants } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ArrowRight, MessageCircle, MousePointerClick, ChevronLeft, ChevronRight } from "lucide-react";
 import ProductReel from "./ProductReel";
 import { getCompany } from "@/lib/data";
@@ -65,6 +65,20 @@ export default function Hero() {
   const [modelIdx, setModelIdx] = useState(0);
   const glowOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.4]);
 
+  // Mobile detection (≤768px) — enables lightweight static fallback on phones.
+  // Desktop remains on full Three.js / GLB rendering (untouched).
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    setMounted(true);
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   const current = models[modelIdx];
   const prev = () => setModelIdx((v) => (v - 1 + models.length) % models.length);
   const next = () => setModelIdx((v) => (v + 1) % models.length);
@@ -85,53 +99,81 @@ export default function Hero() {
         />
       </motion.div>
 
-      {/* Full-bleed 3D layer — borderless */}
+      {/* Full-bleed visual layer — borderless */}
       <div className="absolute inset-0 z-0">
-        <Product3D locked={locked} modelPath={current.path} />
+        {/* Desktop / tablet: full Three.js GLB rendering (unchanged) */}
+        {mounted && !isMobile ? (
+          <>
+            <Product3D locked={locked} modelPath={current.path} />
 
-        {/* Model switcher (bottom-left — no collision with unlock button) */}
-        <div className="absolute bottom-6 left-6 z-40 flex items-center gap-1.5">
-          <motion.button
-            onClick={prev}
-            className="w-8 h-8 flex items-center justify-center rounded-full backdrop-blur-xl border border-white/60 bg-white/70 text-[#334155] hover:bg-white/90 transition-colors"
-            aria-label="Previous model"
-          >
-            <ChevronLeft size={15} />
-          </motion.button>
-          <motion.span
-            key={current.id}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-[11px] font-semibold text-[#334155] bg-white/60 backdrop-blur-lg border border-white/50 px-3 py-1.5 rounded-full min-w-[100px] text-center"
-          >
-            {current.name}
-          </motion.span>
-          <motion.button
-            onClick={next}
-            className="w-8 h-8 flex items-center justify-center rounded-full backdrop-blur-xl border border-white/60 bg-white/70 text-[#334155] hover:bg-white/90 transition-colors"
-            aria-label="Next model"
-          >
-            <ChevronRight size={15} />
-          </motion.button>
-        </div>
+            {/* Model switcher (bottom-left — no collision with unlock button) */}
+            <div className="absolute bottom-6 left-6 z-40 flex items-center gap-1.5">
+              <motion.button
+                onClick={prev}
+                className="w-8 h-8 flex items-center justify-center rounded-full backdrop-blur-xl border border-white/60 bg-white/70 text-[#334155] hover:bg-white/90 transition-colors"
+                aria-label="Previous model"
+              >
+                <ChevronLeft size={15} />
+              </motion.button>
+              <motion.span
+                key={current.id}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[11px] font-semibold text-[#334155] bg-white/60 backdrop-blur-lg border border-white/50 px-3 py-1.5 rounded-full min-w-[100px] text-center"
+              >
+                {current.name}
+              </motion.span>
+              <motion.button
+                onClick={next}
+                className="w-8 h-8 flex items-center justify-center rounded-full backdrop-blur-xl border border-white/60 bg-white/70 text-[#334155] hover:bg-white/90 transition-colors"
+                aria-label="Next model"
+              >
+                <ChevronRight size={15} />
+              </motion.button>
+            </div>
 
-        {/* Unlock interaction button (bottom-right) */}
-        <button
-          onClick={() => setLocked((v) => !v)}
-          className="absolute bottom-6 right-6 z-40 inline-flex items-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-xl text-xs font-semibold transition-all duration-300 hover:scale-[1.04] active:scale-95"
-          style={{
-            background:
-              locked
-                ? "linear-gradient(135deg, rgba(255,255,255,0.82), rgba(255,255,255,0.5))"
-                : "linear-gradient(135deg, rgba(220,38,38,0.92), rgba(185,28,28,0.85))",
-            border: locked ? "1px solid rgba(255,255,255,0.7)" : "1px solid rgba(220,38,38,0.4)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 6px 24px rgba(0,0,0,0.12)",
-            color: locked ? "#334155" : "#fff",
-          }}
-        >
-          <MousePointerClick size={14} />
-          {locked ? "Unlock model" : "Lock model"}
-        </button>
+            {/* Unlock interaction button (bottom-right) */}
+            <button
+              onClick={() => setLocked((v) => !v)}
+              className="absolute bottom-6 right-6 z-40 inline-flex items-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-xl text-xs font-semibold transition-all duration-300 hover:scale-[1.04] active:scale-95"
+              style={{
+                background:
+                  locked
+                    ? "linear-gradient(135deg, rgba(255,255,255,0.82), rgba(255,255,255,0.5))"
+                    : "linear-gradient(135deg, rgba(220,38,38,0.92), rgba(185,28,28,0.85))",
+                border: locked ? "1px solid rgba(255,255,255,0.7)" : "1px solid rgba(220,38,38,0.4)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 6px 24px rgba(0,0,0,0.12)",
+                color: locked ? "#334155" : "#fff",
+              }}
+            >
+              <MousePointerClick size={14} />
+              {locked ? "Unlock model" : "Lock model"}
+            </button>
+          </>
+        ) : null}
+
+        {/* Mobile (≤768px): lightweight static fallback — no GLB / no Canvas / no spinner. */}
+        {mounted && isMobile && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none md:hidden">
+            <div className="relative w-[70%] max-w-[340px] animate-float" style={{ animationDuration: "7s" }}>
+              {/* soft ambient glow behind product to keep Apple / HarmonyOS premium feel */}
+              <div
+                className="absolute inset-0 rounded-full opacity-70"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at center, rgba(191,219,254,0.35) 0%, rgba(255,255,255,0) 70%)",
+                  filter: "blur(30px)",
+                }}
+              />
+              <img
+                src="/assets/hero/hero.svg"
+                alt={`${company.brand} Suspension Components`}
+                className="relative w-full h-auto object-contain"
+                loading="eager"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Foreground content */}

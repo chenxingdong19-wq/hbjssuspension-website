@@ -75,17 +75,17 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
               </span>
             </div>
 
-            {/* OEM code badge */}
+            {/* OEM code badge — always visible on mobile (no hover), hover-reveal on desktop */}
             {product.oem && (
-              <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute top-4 right-4 z-10 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
                 <span className="notranslate text-[10px] font-mono px-2 py-1 rounded bg-white/80 text-[#475569] border border-gray-200 backdrop-blur-sm">
                   {product.oem}
                 </span>
               </div>
             )}
 
-            {/* Inquire button on hover */}
-            <div className="absolute bottom-4 left-4 right-4 z-[3] opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+            {/* Inquire entry — always visible on mobile (no hover), hover-reveal on desktop */}
+            <div className="absolute bottom-4 left-4 right-4 z-[3] md:opacity-0 md:translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0 transition-all duration-300">
               <span className="flex items-center justify-center gap-1.5 px-4 py-2 bg-accent/90 text-white text-xs font-semibold rounded-xl backdrop-blur-sm">
                 <Send size={12} />
                 Inquire
