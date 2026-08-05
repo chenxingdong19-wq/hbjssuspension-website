@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { getCategories, getCompany } from "@/lib/data";
 
@@ -202,73 +202,109 @@ export default function Navbar() {
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {mobileOpen && (
-          <div className="lg:hidden border-t border-gray-200 py-4 space-y-1">
-            {navLinks.map((link) =>
-              link.label === "Products" ? (
-                <div key={link.href}>
-                  <button
-                    onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
-                    className={`w-full flex items-center justify-between px-4 py-3 text-base font-medium transition-colors rounded-md ${
-                      pathname === "/products" || pathname.startsWith("/products")
-                        ? "text-accent bg-red-50"
-                        : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
-                    }`}
-                  >
-                    {link.label}
-                    <ChevronDown
-                      size={16}
-                      className={`transition-transform duration-200 ${mobileProductsOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
-                  {mobileProductsOpen && (
-                    <div className="pb-2 space-y-0.5">
-                      <Link
-                        href="/products"
-                        onClick={() => setMobileOpen(false)}
-                        className="block pl-10 pr-4 py-2.5 text-sm font-medium text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03] transition-colors rounded-md"
-                      >
-                        All Products
-                      </Link>
-                      {categories.map((cat) => (
-                        <Link
-                          key={cat.slug}
-                          href={`/products?category=${cat.slug}`}
-                          onClick={() => setMobileOpen(false)}
-                          className="block pl-10 pr-4 py-2.5 text-sm text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03] transition-colors rounded-md"
-                        >
-                          {cat.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`block px-4 py-3 text-base font-medium transition-colors rounded-md ${
-                    pathname === link.href || (link.href === "/products" && pathname.startsWith("/products"))
-                      ? "text-accent bg-red-50"
-                      : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
-            <Link
-              href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="block mx-4 mt-3 px-5 py-3 bg-accent text-white text-center text-sm font-medium btn-primary"
-            >
-              Request Quote
-            </Link>
-          </div>
-        )}
       </nav>
+
+      {/* Mobile menu overlay — full-viewport, blocks all Hero/page content underneath */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Solid backdrop — covers the entire viewport below the header bar */}
+            <motion.div
+              key="mobile-overlay-bg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="lg:hidden fixed inset-0 top-16 z-40"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(248,250,252,0.98) 0%, rgba(238,242,246,0.97) 100%)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+              }}
+            />
+
+            {/* Menu items panel — slides down from the header */}
+            <motion.div
+              key="mobile-overlay-panel"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:hidden fixed top-16 left-0 right-0 bottom-0 z-40 overflow-y-auto"
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-8 pt-6 space-y-1">
+                {navLinks.map((link) =>
+                  link.label === "Products" ? (
+                    <div key={link.href}>
+                      <button
+                        onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+                        className={`w-full flex items-center justify-between px-4 py-3.5 text-base font-medium transition-colors rounded-xl ${
+                          pathname === "/products" || pathname.startsWith("/products")
+                            ? "text-accent bg-red-50/80"
+                            : "text-[#0F172A] hover:bg-black/[0.04]"
+                        }`}
+                      >
+                        {link.label}
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform duration-200 ${mobileProductsOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      {mobileProductsOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden pb-2 space-y-0.5"
+                        >
+                          <Link
+                            href="/products"
+                            onClick={() => setMobileOpen(false)}
+                            className="block pl-10 pr-4 py-2.5 text-sm font-medium text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.04] transition-colors rounded-xl"
+                          >
+                            All Products
+                          </Link>
+                          {categories.map((cat) => (
+                            <Link
+                              key={cat.slug}
+                              href={`/products?category=${cat.slug}`}
+                              onClick={() => setMobileOpen(false)}
+                              className="block pl-10 pr-4 py-2.5 text-sm text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.04] transition-colors rounded-xl"
+                            >
+                              {cat.name}
+                            </Link>
+                          ))}
+                        </motion.div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`block px-4 py-3.5 text-base font-medium transition-colors rounded-xl ${
+                        pathname === link.href || (link.href === "/products" && pathname.startsWith("/products"))
+                          ? "text-accent bg-red-50/80"
+                          : "text-[#0F172A] hover:bg-black/[0.04]"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                )}
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="block mx-4 mt-6 px-5 py-3.5 bg-accent text-white text-center text-sm font-semibold btn-primary rounded-2xl"
+                >
+                  Request Quote
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }
