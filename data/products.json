@@ -71,9 +71,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "suspension-ball-joint",
-    "image": "/assets/products/stabilizer-links-ball-joints/ball-joint-001/01.webp",
+    "image": "/assets/products/stabilizer-links-ball-joints/suspension-ball-joint/ball-joint-001/01.webp",
     "gallery": [
-      "/assets/products/stabilizer-links-ball-joints/ball-joint-001/01.webp"
+      "/assets/products/stabilizer-links-ball-joints/suspension-ball-joint/ball-joint-001/01.webp"
     ],
     "oem": "K750177",
     "vehicle": "Toyota Camry 2007-2011, RAV4 2006-2012",
@@ -91,9 +91,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "suspension-ball-joint",
-    "image": "/assets/products/stabilizer-links-ball-joints/ball-joint-002/01.webp",
+    "image": "/assets/products/stabilizer-links-ball-joints/suspension-ball-joint/ball-joint-002/01.webp",
     "gallery": [
-      "/assets/products/stabilizer-links-ball-joints/ball-joint-002/01.webp"
+      "/assets/products/stabilizer-links-ball-joints/suspension-ball-joint/ball-joint-002/01.webp"
     ],
     "oem": "K750178",
     "vehicle": "Honda Accord 2008-2012, Civic 2006-2011",
@@ -111,10 +111,10 @@
     "category": "Bushings",
     "categorySlug": "bushings",
     "subcategorySlug": "control-arm-bushing",
-    "image": "/assets/products/bushings/bushing-001/01.webp",
+    "image": "/assets/products/bushings/control-arm-bushing/bushing-001/01.webp",
     "gallery": [
-      "/assets/products/bushings/bushing-001/01.webp",
-      "/assets/products/bushings/bushing-001/03.webp"
+      "/assets/products/bushings/control-arm-bushing/bushing-001/01.webp",
+      "/assets/products/bushings/control-arm-bushing/bushing-001/03.webp"
     ],
     "oem": "54584-2S000",
     "vehicle": "Hyundai/Kia Multi-Model",
@@ -132,9 +132,9 @@
     "category": "Bushings",
     "categorySlug": "bushings",
     "subcategorySlug": "suspension-small-bushing",
-    "image": "/assets/products/bushings/bushing-002/01.webp",
+    "image": "/assets/products/bushings/suspension-small-bushing/bushing-002/01.webp",
     "gallery": [
-      "/assets/products/bushings/bushing-002/01.webp"
+      "/assets/products/bushings/suspension-small-bushing/bushing-002/01.webp"
     ],
     "oem": "54813-2S000",
     "vehicle": "Universal Application",
@@ -152,9 +152,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "front-stabilizer-link-ball-joint",
-    "image": "/assets/products/stabilizer-links-ball-joints/other-001/01.svg",
+    "image": "/assets/products/stabilizer-links-ball-joints/front-stabilizer-link-ball-joint/other-001/01.svg",
     "gallery": [
-      "/assets/products/stabilizer-links-ball-joints/other-001/01.svg"
+      "/assets/products/stabilizer-links-ball-joints/front-stabilizer-link-ball-joint/other-001/01.svg"
     ],
     "oem": "56820-2S000",
     "vehicle": "Hyundai/Kia Multi-Model",
@@ -172,9 +172,9 @@
     "category": "Stabilizer Links & Ball Joints",
     "categorySlug": "stabilizer-links-ball-joints",
     "subcategorySlug": "front-stabilizer-link-ball-joint",
-    "image": "/assets/products/stabilizer-links-ball-joints/other-002/01.webp",
+    "image": "/assets/products/stabilizer-links-ball-joints/front-stabilizer-link-ball-joint/other-002/01.webp",
     "gallery": [
-      "/assets/products/stabilizer-links-ball-joints/other-002/01.webp"
+      "/assets/products/stabilizer-links-ball-joints/front-stabilizer-link-ball-joint/other-002/01.webp"
     ],
     "oem": "54830-2S000",
     "vehicle": "Hyundai Sonata 2011-2014",
