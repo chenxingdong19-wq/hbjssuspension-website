@@ -52,7 +52,7 @@ function RotatingModel() {
   });
 
   return (
-    <group ref={group} scale={1.1}>
+    <group ref={group} scale={1.35}>
       <Center>
         <primitive object={scene as unknown as Object3D} />
       </Center>
@@ -176,7 +176,7 @@ export default function Product3DViewer() {
               <div className="absolute inset-0 z-10 w-full h-full">
                 <Canvas
                   dpr={[1, 1.75]}
-                  camera={{ position: [0, 0.8, 3.8], fov: 40 }}
+                  camera={{ position: [0, 0.8, 3.3], fov: 36 }}
                   gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false, powerPreference: "high-performance" }}
                   onCreated={({ scene, gl }) => {
                     // Higher-res environment map — crisp reflections on metal PBR parts
@@ -188,7 +188,7 @@ export default function Product3DViewer() {
                 >
                   <Suspense fallback={null}>
                     <RotatingModel />
-                    <ContactShadows position={[0, -1.5, 0]} opacity={0.3} blur={2.4} scale={8} far={2} frames={1} />
+                    <ContactShadows position={[0, -1.5, 0]} opacity={0.3} blur={2.4} scale={9} far={2} frames={1} />
                   </Suspense>
                   <ambientLight intensity={0.65} />
                   <directionalLight position={[4, 6, 4]} intensity={1.5} />
