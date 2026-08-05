@@ -23,15 +23,32 @@ export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
+  // Mobile Products accordion (independent from desktop hover dropdown)
+  const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const pathname = usePathname();
   const categories = getCategories();
   const company = getCompany();
   const lastScrollY = useRef(0);
   const isAnimating = useRef(false);
+  // Live ref of mobileOpen so the scroll handler can read it without stale closure
+  const mobileOpenRef = useRef(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  // Keep ref in sync
+  useEffect(() => {
+    mobileOpenRef.current = mobileOpen;
+  }, [mobileOpen]);
 
   const onScroll = useCallback(() => {
     const currentY = window.scrollY;
     setScrolled(currentY > SCROLL_THRESHOLD);
+
+    // When the mobile menu is open, never hide the header/menu via scroll
+    if (mobileOpenRef.current) {
+      setHidden(false);
+      lastScrollY.current = currentY;
+      return;
+    }
 
     if (currentY <= SCROLL_THRESHOLD) {
       setHidden(false);
@@ -64,8 +81,33 @@ export default function Navbar() {
     return () => clearTimeout(timer);
   }, [hidden]);
 
+  // Click outside closes the mobile menu
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handler = (e: PointerEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", handler);
+    return () => document.removeEventListener("pointerdown", handler);
+  }, [mobileOpen]);
+
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
   return (
     <motion.header
+      ref={headerRef}
       initial={false}
       animate={{
         y: hidden ? -80 : 0,
@@ -163,20 +205,60 @@ export default function Navbar() {
 
         {mobileOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-4 py-3 text-base font-medium transition-colors rounded-md ${
-                  pathname === link.href || (link.href === "/products" && pathname.startsWith("/products"))
-                    ? "text-accent bg-red-50"
-                    : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) =>
+              link.label === "Products" ? (
+                <div key={link.href}>
+                  <button
+                    onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+                    className={`w-full flex items-center justify-between px-4 py-3 text-base font-medium transition-colors rounded-md ${
+                      pathname === "/products" || pathname.startsWith("/products")
+                        ? "text-accent bg-red-50"
+                        : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
+                    }`}
+                  >
+                    {link.label}
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform duration-200 ${mobileProductsOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {mobileProductsOpen && (
+                    <div className="pb-2 space-y-0.5">
+                      <Link
+                        href="/products"
+                        onClick={() => setMobileOpen(false)}
+                        className="block pl-10 pr-4 py-2.5 text-sm font-medium text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03] transition-colors rounded-md"
+                      >
+                        All Products
+                      </Link>
+                      {categories.map((cat) => (
+                        <Link
+                          key={cat.slug}
+                          href={`/products?category=${cat.slug}`}
+                          onClick={() => setMobileOpen(false)}
+                          className="block pl-10 pr-4 py-2.5 text-sm text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03] transition-colors rounded-md"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`block px-4 py-3 text-base font-medium transition-colors rounded-md ${
+                    pathname === link.href || (link.href === "/products" && pathname.startsWith("/products"))
+                      ? "text-accent bg-red-50"
+                      : "text-[#475569] hover:text-[#0F172A] hover:bg-black/[0.03]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
