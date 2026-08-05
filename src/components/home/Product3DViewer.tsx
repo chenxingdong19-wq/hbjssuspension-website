@@ -3,6 +3,7 @@
 import { Component, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Center, ContactShadows, useGLTF } from "@react-three/drei";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   PMREMGenerator,
   type Group,
@@ -16,8 +17,16 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 // Local Draco decoder — no external CDN (same as desktop Product3D)
 useGLTF.setDecoderPath("/draco/");
 
-// Reuses the existing desktop model — mobile second-screen showcase.
-const MODEL_PATH = "/assets/models/model-001.glb";
+// Model catalog — same entries as the desktop Hero. Only model-001 exists right now;
+// the rest show "More products coming soon" and are reserved for future GLB files.
+const MODELS = [
+  { id: "lower-control-arm", name: "Lower Control Arm", path: "/assets/models/model-001.glb" },
+  { id: "stabilizer-link",  name: "Stabilizer Link",    path: "/assets/models/model-002.glb" },
+  { id: "ball-joint",       name: "Ball Joint",         path: "/assets/models/model-003.glb" },
+  { id: "bracket",          name: "Bracket",            path: "/assets/models/model-004.glb" },
+] as const;
+
+const COMING_SOON = "More products coming soon";
 
 /** Boost PBR material response to the environment map (same technique as Product3D). */
 function boostEnvIntensity(scene: Object3D) {
@@ -37,8 +46,8 @@ function boostEnvIntensity(scene: Object3D) {
 
 /** Auto slow rotation — industrial display cabinet.
  *  FUTURE INTENT (not implemented now, per scope): pointer-drag rotation & wheel zoom. */
-function RotatingModel() {
-  const { scene } = useGLTF(MODEL_PATH);
+function RotatingModel({ modelPath }: { modelPath: string }) {
+  const { scene } = useGLTF(modelPath);
   const group = useRef<Group>(null);
 
   useEffect(() => {
@@ -77,11 +86,13 @@ class ViewerErrorBoundary extends Component<
  * Mobile-only (≤768px) second-screen 3D product showcase.
  *
  * - Rendered by pages/Home right after the Hero (before Stats).
- * - Auto slow rotation of the lower control arm, centered & large.
+ * - Auto slow rotation of the displayed model, centered & large.
+ * - Feature key: glass capsule at the bottom switches between models
+ *   (circular prev/next). Connected model → renders; unconnected model
+ *   → transparent area + "More products coming soon" label.
  * - GLB is fetched only when this section approaches the viewport
  *   (IntersectionObserver 200px margin) — never blocks first paint.
- * - Transparent background blends with the page; PBR/HDR environment
- *   for a crisp industrial showcase look.
+ * - Transparent background blends with the page; PBR/HDR environment.
  * - Desktop never renders this section (matchMedia gate + md:hidden).
  */
 export default function Product3DViewer() {
@@ -89,8 +100,13 @@ export default function Product3DViewer() {
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [inView, setInView] = useState(false);
-  // null = checking, true = GLB ready, false = not available
+  const [modelIdx, setModelIdx] = useState(0);
+  // null = checking, true = current GLB ready, false = not available
   const [modelOk, setModelOk] = useState<boolean | null>(null);
+
+  const current = MODELS[modelIdx];
+  const prev = () => setModelIdx((v) => (v - 1 + MODELS.length) % MODELS.length);
+  const next = () => setModelIdx((v) => (v + 1) % MODELS.length);
 
   // Mount + mobile detection (≤768px)
   useEffect(() => {
@@ -125,11 +141,12 @@ export default function Product3DViewer() {
     return () => obs.disconnect();
   }, [isMobile]);
 
-  // Pre-flight the GLB only near the viewport
+  // Pre-flight the current model — reset + re-check on every switch
   useEffect(() => {
+    setModelOk(null);
     if (!isMobile || !inView) return;
     let cancelled = false;
-    fetch(MODEL_PATH, { method: "HEAD" })
+    fetch(current.path, { method: "HEAD" })
       .then((r) => {
         if (!cancelled) setModelOk(r.ok);
       })
@@ -139,7 +156,7 @@ export default function Product3DViewer() {
     return () => {
       cancelled = true;
     };
-  }, [isMobile, inView]);
+  }, [isMobile, inView, current.path]);
 
   const showCanvas = mounted && isMobile && inView && modelOk === true;
 
@@ -155,7 +172,7 @@ export default function Product3DViewer() {
           </span>
           <h2 className="text-2xl font-bold text-[#0F172A] mt-3">View in 360°</h2>
           <p className="text-sm text-[#64748B] mt-2 max-w-xs mx-auto">
-            Lower control arm — rotating 3D showcase, engineered for precision.
+            Explore our suspension components in rotating 3D showcase.
           </p>
         </div>
 
@@ -187,7 +204,7 @@ export default function Product3DViewer() {
                   className="w-full h-full"
                 >
                   <Suspense fallback={null}>
-                    <RotatingModel />
+                    <RotatingModel key={current.id} modelPath={current.path} />
                     <ContactShadows position={[0, -1.5, 0]} opacity={0.3} blur={2.4} scale={9} far={2} frames={1} />
                   </Suspense>
                   <ambientLight intensity={0.65} />
@@ -205,6 +222,30 @@ export default function Product3DViewer() {
               <div className="w-6 h-6 border-2 border-slate-200 border-t-accent rounded-full animate-spin" />
             </div>
           )}
+        </div>
+
+        {/* Feature key — always visible glass capsule (touch friendly, no hover) */}
+        <div className="flex items-center justify-center gap-2 mt-5">
+          <button
+            onClick={prev}
+            aria-label="Previous model"
+            className="w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-xl border border-white/60 bg-white/70 text-[#334155] transition-transform active:scale-90"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <span
+            key={modelOk === true ? current.id : `empty-${current.id}`}
+            className="text-xs font-semibold text-[#334155] bg-white/60 backdrop-blur-lg border border-white/50 px-4 py-2 rounded-full min-w-[150px] text-center max-w-[210px] truncate"
+          >
+            {modelOk === true ? current.name : COMING_SOON}
+          </span>
+          <button
+            onClick={next}
+            aria-label="Next model"
+            className="w-10 h-10 flex items-center justify-center rounded-full backdrop-blur-xl border border-white/60 bg-white/70 text-[#334155] transition-transform active:scale-90"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
       </div>
     </section>
