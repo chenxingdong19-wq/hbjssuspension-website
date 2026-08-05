@@ -3,7 +3,15 @@
 import { Component, Suspense, useRef, useState, useEffect, type ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, ContactShadows } from "@react-three/drei";
-import { PMREMGenerator, Vector3, type Group, type Object3D } from "three";
+import {
+  PMREMGenerator,
+  Vector3,
+  type Group,
+  type Object3D,
+  type Mesh,
+  type MeshStandardMaterial,
+  type MeshPhysicalMaterial,
+} from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 // Draco decoder hosted locally — no external CDN dependency
@@ -23,6 +31,23 @@ class CanvasErrorBoundary extends Component<{ children: ReactNode; fallback: Rea
 // Resting pose — fixed forever (position never moves). Balanced position.
 const FIXED_POS = new Vector3(1.4, -0.3, 0);
 
+/** Boost PBR material response to the environment map.
+ *  Lower roughness → stronger mirror reflection; keep base color untouched. */
+function boostEnvIntensity(scene: Object3D) {
+  scene.traverse((obj) => {
+    const mesh = obj as Mesh;
+    if (!mesh.isMesh || !mesh.material) return;
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    for (const mat of mats) {
+      const m = mat as MeshStandardMaterial | MeshPhysicalMaterial;
+      if ("envMapIntensity" in m) {
+        m.envMapIntensity = 1.15;
+        m.needsUpdate = true;
+      }
+    }
+  });
+}
+
 function ModelGroup({
   interactable,
   modelPath,
@@ -34,6 +59,10 @@ function ModelGroup({
   const group = useRef<Group>(null);
   const rotationY = useRef(0);
   const rotationX = useRef(0);
+
+  useEffect(() => {
+    boostEnvIntensity(scene);
+  }, [scene]);
 
   useFrame((_, delta) => {
     if (!group.current) return;
@@ -156,12 +185,14 @@ export default function Product3D({
         }
       >
         <Canvas
-          dpr={[0.8, 1.25]}
+          dpr={[1, 2]}
           camera={{ position: [2.8, 1.5, 3.6], fov: 38 }}
-          gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false }}
+          gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false, powerPreference: "high-performance" }}
           onCreated={({ scene, gl }) => {
+            // Higher-res environment map for crisp metal reflections on PBR materials
             const pmrem = new PMREMGenerator(gl);
-            scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+            scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.15).texture;
+            gl.toneMappingExposure = 1.15;
           }}
           style={{ width: "100%", height: "100%" }}
           className={`!absolute !inset-0 ${locked ? "cursor-default" : "cursor-grab active:cursor-grabbing touch-none"}`}
@@ -170,10 +201,12 @@ export default function Product3D({
             <ModelGroup key={modelPath} interactable={!locked} modelPath={modelPath} />
           </Suspense>
       <ContactShadows position={[1.4, -1.0, 0]} opacity={0.38} blur={2.4} scale={6} far={1.8} frames={1} />
-          <ambientLight intensity={0.75} />
-          <directionalLight position={[4, 6, 4]} intensity={1.6} />
+          <ambientLight intensity={0.65} />
+          <directionalLight position={[4, 6, 4]} intensity={1.5} />
           <directionalLight position={[-4, 2, -4]} intensity={0.5} color="#bcd9ff" />
-          <spotLight position={[0, 8, 2]} angle={0.55} penumbra={1} intensity={1.4} />
+          <spotLight position={[0, 8, 2]} angle={0.55} penumbra={1} intensity={1.3} />
+          {/* Rim / back light — crisps the silhouette for industrial showcase look */}
+          <directionalLight position={[-3, 1, -4]} intensity={0.6} color="#e2e8f0" />
         </Canvas>
       </CanvasErrorBoundary>
     </div>

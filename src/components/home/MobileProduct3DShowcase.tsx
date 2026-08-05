@@ -3,7 +3,15 @@
 import { Suspense, Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Center, ContactShadows, useGLTF } from "@react-three/drei";
-import { type Group, type Object3D } from "three";
+import {
+  PMREMGenerator,
+  type Group,
+  type Object3D,
+  type Mesh,
+  type MeshStandardMaterial,
+  type MeshPhysicalMaterial,
+} from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 // Local Draco decoder — no external CDN (same as Product3D)
 useGLTF.setDecoderPath("/draco/");
@@ -13,6 +21,22 @@ const MODEL_PATH = "/assets/models/model-001.glb";
 // Real product image — graceful fallback while the GLB loads/renders.
 // Never shows a dark placeholder box or placeholder text.
 const PRODUCT_IMAGE = "/assets/products/control-arms/control-arm-001/01.webp";
+
+/** Boost PBR material response to the environment map (same as desktop Product3D). */
+function boostEnvIntensity(scene: Object3D) {
+  scene.traverse((obj) => {
+    const mesh = obj as Mesh;
+    if (!mesh.isMesh || !mesh.material) return;
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    for (const mat of mats) {
+      const m = mat as MeshStandardMaterial | MeshPhysicalMaterial;
+      if ("envMapIntensity" in m) {
+        m.envMapIntensity = 1.15;
+        m.needsUpdate = true;
+      }
+    }
+  });
+}
 
 function ShowcaseModel() {
   const { scene } = useGLTF(MODEL_PATH);
@@ -24,6 +48,10 @@ function ShowcaseModel() {
       group.current.rotation.y += delta * 0.35;
     }
   });
+
+  useEffect(() => {
+    boostEnvIntensity(scene);
+  }, [scene]);
 
   return (
     <group ref={group} scale={1.15}>
@@ -172,19 +200,27 @@ export default function MobileProduct3DShowcase() {
               <div className="absolute inset-0 z-10">
                 <LoadingOverlay />
                 <Canvas
-                  dpr={[0.8, 1.25]}
-                  camera={{ position: [0, 0.8, 3.8], fov: 42 }}
-                  gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false }}
+                  dpr={[1, 1.75]}
+                  camera={{ position: [0, 0.8, 3.8], fov: 40 }}
+                  gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false, powerPreference: "high-performance" }}
+                  onCreated={({ scene, gl }) => {
+                    // Higher-res environment map — crisp reflections on metal PBR parts
+                    const pmrem = new PMREMGenerator(gl);
+                    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.15).texture;
+                    gl.toneMappingExposure = 1.15;
+                  }}
                   className="w-full h-full"
                 >
                   <Suspense fallback={null}>
                     <ShowcaseModel />
                     <ContactShadows position={[0, -1.4, 0]} opacity={0.32} blur={2.4} scale={8} far={2} frames={1} />
                   </Suspense>
-                  <ambientLight intensity={0.75} />
-                  <directionalLight position={[4, 6, 4]} intensity={1.6} />
+                  <ambientLight intensity={0.65} />
+                  <directionalLight position={[4, 6, 4]} intensity={1.5} />
                   <directionalLight position={[-4, 2, -4]} intensity={0.5} color="#bcd9ff" />
-                  <spotLight position={[0, 8, 2]} angle={0.55} penumbra={1} intensity={1.4} />
+                  <spotLight position={[0, 8, 2]} angle={0.55} penumbra={1} intensity={1.3} />
+                  {/* Rim / back light — crisp silhouette for industrial showcase look */}
+                  <directionalLight position={[-3, 1, -4]} intensity={0.6} color="#e2e8f0" />
                 </Canvas>
               </div>
             </CanvasErrorBoundary>
