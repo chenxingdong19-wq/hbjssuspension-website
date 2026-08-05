@@ -18,10 +18,6 @@ const Product3D = dynamic(() => import("./Product3D"), {
   ),
 });
 
-// Mobile-only reserved 3D viewer — transparent when GLB absent, auto-rotation when ready.
-// Dropped into the "original video slot" (below CTA) on phones. Desktop keeps its
-// full-bleed Hero 3D via Product3D (unchanged).
-const Product3DViewer = dynamic(() => import("./Product3DViewer"), { ssr: false });
 
 // ═══════════════════════════════════════════════════════════════════
 // Product models — add more entries here as new GLB files become
@@ -227,9 +223,6 @@ export default function Hero() {
               </motion.div>
             </motion.div>
 
-            {/* Mobile-only 3D viewer — reserved slot at the "original video" position.
-                Transparent while no GLB is connected (no product image / no placeholder). */}
-            <Product3DViewer />
           </div>
         </div>
       </div>
