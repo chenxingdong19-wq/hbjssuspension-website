@@ -239,7 +239,7 @@ export default function Hero() {
                   }}
                 />
                 <img
-                  src="/assets/hero/hero.svg"
+                  src="/assets/products/control-arms/control-arm-001/01.webp"
                   alt={`${company.brand} Suspension Components`}
                   className="relative w-full h-auto object-contain"
                   loading="eager"
