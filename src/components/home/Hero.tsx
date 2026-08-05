@@ -152,28 +152,6 @@ export default function Hero() {
           </>
         ) : null}
 
-        {/* Mobile (≤768px): lightweight static fallback — no GLB / no Canvas / no spinner. */}
-        {mounted && isMobile && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none md:hidden">
-            <div className="relative w-[70%] max-w-[340px] animate-float" style={{ animationDuration: "7s" }}>
-              {/* soft ambient glow behind product to keep Apple / HarmonyOS premium feel */}
-              <div
-                className="absolute inset-0 rounded-full opacity-70"
-                style={{
-                  background:
-                    "radial-gradient(ellipse at center, rgba(191,219,254,0.35) 0%, rgba(255,255,255,0) 70%)",
-                  filter: "blur(30px)",
-                }}
-              />
-              <img
-                src="/assets/hero/hero.svg"
-                alt={`${company.brand} Suspension Components`}
-                className="relative w-full h-auto object-contain"
-                loading="eager"
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Foreground content */}
@@ -238,6 +216,35 @@ export default function Hero() {
                   Request Quote
                 </Link>
               </motion.div>
+            </motion.div>
+
+            {/* Mobile-only lightweight product visual (≤768px) — in normal flow below CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="relative mt-12 md:hidden"
+            >
+              <div
+                className="relative w-full max-w-[320px] mx-auto animate-float"
+                style={{ animationDuration: "7s" }}
+              >
+                {/* soft ambient glow behind product to keep Apple / HarmonyOS premium feel */}
+                <div
+                  className="absolute inset-0 rounded-full opacity-70"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at center, rgba(191,219,254,0.35) 0%, rgba(255,255,255,0) 70%)",
+                    filter: "blur(30px)",
+                  }}
+                />
+                <img
+                  src="/assets/hero/hero.svg"
+                  alt={`${company.brand} Suspension Components`}
+                  className="relative w-full h-auto object-contain"
+                  loading="eager"
+                />
+              </div>
             </motion.div>
           </div>
         </div>
