@@ -18,6 +18,11 @@ const Product3D = dynamic(() => import("./Product3D"), {
   ),
 });
 
+// Mobile-only reserved 3D viewer — transparent when GLB absent, auto-rotation when ready.
+// Dropped into the "original video slot" (below CTA) on phones. Desktop keeps its
+// full-bleed Hero 3D via Product3D (unchanged).
+const Product3DViewer = dynamic(() => import("./Product3DViewer"), { ssr: false });
+
 // ═══════════════════════════════════════════════════════════════════
 // Product models — add more entries here as new GLB files become
 // available.  Path → the file inside public/assets/models/.
@@ -84,7 +89,7 @@ export default function Hero() {
   const next = () => setModelIdx((v) => (v + 1) % models.length);
 
   return (
-    <section ref={ref} className="relative min-h-screen flex items-center overflow-hidden bg-ambient section-hero">
+    <section ref={ref} className="relative min-h-screen flex items-start md:items-center overflow-hidden bg-ambient section-hero">
       {/* Parallax ambient glow */}
       <motion.div style={{ opacity: glowOpacity }} className="absolute inset-0 pointer-events-none" aria-hidden>
         <motion.div
@@ -155,14 +160,15 @@ export default function Hero() {
       </div>
 
       {/* Foreground content */}
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 pointer-events-none z-10">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-28 pb-16 md:pb-20 pointer-events-none z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-28 items-center">
           <div>
             {/* Badge */}
             <motion.div
               variants={badgeVariant}
               initial="hidden"
-              animate="show"
+              whileInView="show"
+              viewport={{ once: false }}
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 border border-red-100 mb-8 backdrop-blur-sm pointer-events-auto"
             >
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
@@ -175,7 +181,8 @@ export default function Hero() {
             <motion.h1
               variants={titleVariant}
               initial="hidden"
-              animate="show"
+              whileInView="show"
+              viewport={{ once: false }}
               className="text-4xl sm:text-5xl lg:text-[4rem] font-extrabold tracking-[-0.02em] leading-[1.06] mb-6 bg-gradient-to-b from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-transparent"
             >
               {company.tagline}
@@ -185,7 +192,8 @@ export default function Hero() {
             <motion.p
               variants={descVariant}
               initial="hidden"
-              animate="show"
+              whileInView="show"
+              viewport={{ once: false }}
               className="text-base sm:text-lg text-slate-500 leading-relaxed mb-10 max-w-xl font-medium antialiased pointer-events-auto"
             >
               {company.description}
@@ -195,7 +203,8 @@ export default function Hero() {
             <motion.div
               variants={ctaContainer}
               initial="hidden"
-              animate="show"
+              whileInView="show"
+              viewport={{ once: false }}
               className="flex flex-col sm:flex-row gap-3.5 pointer-events-auto"
             >
               <motion.div variants={ctaItem}>
@@ -218,34 +227,9 @@ export default function Hero() {
               </motion.div>
             </motion.div>
 
-            {/* Mobile-only lightweight product visual (≤768px) — in normal flow below CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="relative mt-12 md:hidden"
-            >
-              <div
-                className="relative w-full max-w-[320px] mx-auto animate-float"
-                style={{ animationDuration: "7s" }}
-              >
-                {/* soft ambient glow behind product to keep Apple / HarmonyOS premium feel */}
-                <div
-                  className="absolute inset-0 rounded-full opacity-70"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse at center, rgba(191,219,254,0.35) 0%, rgba(255,255,255,0) 70%)",
-                    filter: "blur(30px)",
-                  }}
-                />
-                <img
-                  src="/assets/products/control-arms/control-arm-001/01.webp"
-                  alt={`${company.brand} Suspension Components`}
-                  className="relative w-full h-auto object-contain"
-                  loading="eager"
-                />
-              </div>
-            </motion.div>
+            {/* Mobile-only 3D viewer — reserved slot at the "original video" position.
+                Transparent while no GLB is connected (no product image / no placeholder). */}
+            <Product3DViewer />
           </div>
         </div>
       </div>
