@@ -28,10 +28,16 @@ export default function ProductsContent({ products }: { products: Product[] }) {
   // yet) stay visible on the site as requested by the business.
   const categoriesWithProducts = categories;
 
-  // URL param seeding
+  // URL param seeding — read once on mount to avoid setState directly in effect.
+  // searchParams reference changes every render, so we use a ref to guard.
+  const seededFromUrl = useRef(false);
   useEffect(() => {
+    if (seededFromUrl.current) return;
     const cat = searchParams.get("category");
-    if (cat) setCategoryFilter(cat);
+    if (cat) {
+      seededFromUrl.current = true;
+      requestAnimationFrame(() => setCategoryFilter(cat));
+    }
   }, [searchParams]);
 
   // Outside click closes menu

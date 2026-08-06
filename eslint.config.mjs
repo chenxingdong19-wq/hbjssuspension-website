@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Third-party Draco decoder files from three.js — do not lint
+    "public/draco/**",
   ]),
 ]);
 

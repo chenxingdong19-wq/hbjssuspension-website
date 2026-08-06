@@ -41,7 +41,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <ContactFloat />
 
         {/* Tawk.to — live chat, hidden default bubble (custom button opens it) */}
-        <Script id="tawk-to" strategy="afterInteractive">
+        <Script id="tawk-to" strategy="lazyOnload">
           {`
             var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
             (function () {
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             })();
           `}
         </Script>
-        <Script id="tawk-hide-widget" strategy="afterInteractive">
+        <Script id="tawk-hide-widget" strategy="lazyOnload">
           {`
             window.Tawk_API = window.Tawk_API || {};
             window.Tawk_API.onLoad = function () {

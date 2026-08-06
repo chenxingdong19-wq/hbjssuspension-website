@@ -1,8 +1,8 @@
 [
   {
     "id": "bushing-001",
-    "name": "Rear Trailing Arm Bushing",
-    "displayName": "Rear Trailing Arm Bushing",
+    "name": "Control Arm Bushing Kit",
+    "displayName": "Control Arm Bushing Kit",
     "category": "Bushings",
     "categorySlug": "bushings",
     "subcategorySlug": "bushings",
@@ -22,8 +22,8 @@
   },
   {
     "id": "bushing-002",
-    "name": "Rear Trailing Arm Bushing",
-    "displayName": "Rear Trailing Arm Bushing",
+    "name": "Stabilizer Bar Bushing",
+    "displayName": "Stabilizer Bar Bushing",
     "category": "Bushings",
     "categorySlug": "bushings",
     "subcategorySlug": "bushings",
@@ -466,8 +466,8 @@
   },
   {
     "id": "control-arm-001",
-    "name": "Control Arm",
-    "displayName": "Control Arm",
+    "name": "Front Lower Control Arm",
+    "displayName": "Lower Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
     "subcategorySlug": "control-arms",
@@ -487,8 +487,8 @@
   },
   {
     "id": "control-arm-002",
-    "name": "Control Arm",
-    "displayName": "Control Arm",
+    "name": "Rear Upper Control Arm",
+    "displayName": "Upper Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
     "subcategorySlug": "control-arms",
@@ -508,8 +508,8 @@
   },
   {
     "id": "control-arm-003",
-    "name": "Control Arm",
-    "displayName": "Control Arm",
+    "name": "Front Control Arm with Ball Joint",
+    "displayName": "Control Arm w/ Ball Joint",
     "category": "Control Arms",
     "categorySlug": "control-arms",
     "subcategorySlug": "control-arms",
@@ -529,8 +529,8 @@
   },
   {
     "id": "control-arm-004",
-    "name": "Control Arm",
-    "displayName": "Control Arm",
+    "name": "Front Lower Control Arm - Hyundai/Kia",
+    "displayName": "Lower Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
     "subcategorySlug": "control-arms",
@@ -550,8 +550,8 @@
   },
   {
     "id": "control-arm-005",
-    "name": "Control Arm",
-    "displayName": "Control Arm",
+    "name": "Front Lower Control Arm - Hyundai/Kia",
+    "displayName": "Lower Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
     "subcategorySlug": "control-arms",
@@ -571,7 +571,7 @@
   },
   {
     "id": "control-arm-006",
-    "name": "Control Arm",
+    "name": "Control Arm 006",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -592,7 +592,7 @@
   },
   {
     "id": "control-arm-007",
-    "name": "Control Arm",
+    "name": "Control Arm 007",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -613,7 +613,7 @@
   },
   {
     "id": "control-arm-008",
-    "name": "Control Arm",
+    "name": "Control Arm 008",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -634,7 +634,7 @@
   },
   {
     "id": "control-arm-009",
-    "name": "Control Arm",
+    "name": "Control Arm 009",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -655,7 +655,7 @@
   },
   {
     "id": "control-arm-010",
-    "name": "Control Arm",
+    "name": "Control Arm 010",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -676,7 +676,7 @@
   },
   {
     "id": "control-arm-011",
-    "name": "Control Arm",
+    "name": "Control Arm 011",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -697,7 +697,7 @@
   },
   {
     "id": "control-arm-012",
-    "name": "Control Arm",
+    "name": "Control Arm 012",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -718,7 +718,7 @@
   },
   {
     "id": "control-arm-013",
-    "name": "Control Arm",
+    "name": "Control Arm 013",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -739,7 +739,7 @@
   },
   {
     "id": "control-arm-014",
-    "name": "Control Arm",
+    "name": "Control Arm 014",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -760,7 +760,7 @@
   },
   {
     "id": "control-arm-015",
-    "name": "Control Arm",
+    "name": "Control Arm 015",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -781,7 +781,7 @@
   },
   {
     "id": "control-arm-016",
-    "name": "Control Arm",
+    "name": "Control Arm 016",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -802,7 +802,7 @@
   },
   {
     "id": "control-arm-017",
-    "name": "Control Arm",
+    "name": "Control Arm 017",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -823,7 +823,7 @@
   },
   {
     "id": "control-arm-018",
-    "name": "Control Arm",
+    "name": "Control Arm 018",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -844,7 +844,7 @@
   },
   {
     "id": "control-arm-019",
-    "name": "Control Arm",
+    "name": "Control Arm 019",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -865,7 +865,7 @@
   },
   {
     "id": "control-arm-020",
-    "name": "Control Arm",
+    "name": "Control Arm 020",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -886,7 +886,7 @@
   },
   {
     "id": "control-arm-021",
-    "name": "Control Arm",
+    "name": "Control Arm 021",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -908,7 +908,7 @@
   },
   {
     "id": "control-arm-022",
-    "name": "Control Arm",
+    "name": "Control Arm 022",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -929,7 +929,7 @@
   },
   {
     "id": "control-arm-023",
-    "name": "Control Arm",
+    "name": "Control Arm 023",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -950,7 +950,7 @@
   },
   {
     "id": "control-arm-024",
-    "name": "Control Arm",
+    "name": "Control Arm 024",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -971,7 +971,7 @@
   },
   {
     "id": "control-arm-025",
-    "name": "Control Arm",
+    "name": "Control Arm 025",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -993,7 +993,7 @@
   },
   {
     "id": "control-arm-026",
-    "name": "Control Arm",
+    "name": "Control Arm 026",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1014,7 +1014,7 @@
   },
   {
     "id": "control-arm-027",
-    "name": "Control Arm",
+    "name": "Control Arm 027",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1035,7 +1035,7 @@
   },
   {
     "id": "control-arm-028",
-    "name": "Control Arm",
+    "name": "Control Arm 028",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1056,7 +1056,7 @@
   },
   {
     "id": "control-arm-029",
-    "name": "Control Arm",
+    "name": "Control Arm 029",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1077,7 +1077,7 @@
   },
   {
     "id": "control-arm-030",
-    "name": "Control Arm",
+    "name": "Control Arm 030",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1098,7 +1098,7 @@
   },
   {
     "id": "control-arm-031",
-    "name": "Control Arm",
+    "name": "Control Arm 031",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1119,7 +1119,7 @@
   },
   {
     "id": "control-arm-032",
-    "name": "Control Arm",
+    "name": "Control Arm 032",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1140,7 +1140,7 @@
   },
   {
     "id": "control-arm-033",
-    "name": "Control Arm",
+    "name": "Control Arm 033",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1161,7 +1161,7 @@
   },
   {
     "id": "control-arm-034",
-    "name": "Control Arm",
+    "name": "Control Arm 034",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1182,7 +1182,7 @@
   },
   {
     "id": "control-arm-035",
-    "name": "Control Arm",
+    "name": "Control Arm 035",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1203,7 +1203,7 @@
   },
   {
     "id": "control-arm-036",
-    "name": "control arm",
+    "name": "Control Arm 036",
     "displayName": "control arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1224,7 +1224,7 @@
   },
   {
     "id": "control-arm-037",
-    "name": "Control Arm",
+    "name": "Control Arm 037",
     "displayName": "Control Arm",
     "category": "Control Arms",
     "categorySlug": "control-arms",
@@ -1306,7 +1306,7 @@
   },
   {
     "id": "other-003",
-    "name": "Rack End",
+    "name": "Rack End Assembly",
     "displayName": "Rack End",
     "category": "Other Products",
     "categorySlug": "other-products",

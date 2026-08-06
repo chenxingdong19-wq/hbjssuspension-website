@@ -153,7 +153,7 @@ export default function Product3D({
   const [modelOk, setModelOk] = useState<null | boolean>(null);
 
   useEffect(() => {
-    setModelOk(null);
+    requestAnimationFrame(() => setModelOk(null));
     fetch(modelPath, { method: "HEAD" })
       .then((r) => setModelOk(r.ok))
       .catch(() => setModelOk(false));

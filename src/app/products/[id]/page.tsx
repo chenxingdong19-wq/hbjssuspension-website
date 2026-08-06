@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProductById, getProducts } from "@/lib/data";
-import { scanProductGallery, readProductInfo } from "@/lib/product-folder";
+import { scanProductGallery } from "@/lib/product-folder";
 import ProductDetailClient from "./ProductDetailClient";
 
 interface Props {
@@ -39,19 +39,6 @@ export default async function ProductDetailPage({ params }: Props) {
   if (diskImages.length > 0) {
     product.image = diskImages[0];
     product.gallery = diskImages;
-  }
-
-  // Merge info.json from disk (overrides products.json defaults)
-  const info = readProductInfo(product.categorySlug, product.id);
-  if (info) {
-    if (typeof info.oem === "string") product.oem = info.oem;
-    if (typeof info.vehicle === "string") product.vehicle = info.vehicle;
-    if (typeof info.material === "string") product.material = info.material;
-    if (typeof info.surface === "string") product.surface = info.surface;
-    if (typeof info.process === "string") product.process = info.process;
-    if (typeof info.packaging === "string") product.packaging = info.packaging;
-    if (typeof info.description === "string") product.description = info.description;
-    if (typeof info.featured === "boolean") product.featured = info.featured;
   }
 
   return <ProductDetailClient product={product} />;

@@ -75,7 +75,7 @@ export default function Hero() {
     const mq = window.matchMedia("(max-width: 768px)");
     const update = () => setIsMobile(mq.matches);
     update();
-    setMounted(true);
+    requestAnimationFrame(() => setMounted(true));
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
@@ -202,6 +202,7 @@ export default function Hero() {
               <motion.div variants={ctaItem}>
                 <Link
                   href="/products"
+                  prefetch={false}
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-white text-sm font-semibold btn-primary shadow-lg shadow-red-200 group"
                 >
                   Explore Products
@@ -211,6 +212,7 @@ export default function Hero() {
               <motion.div variants={ctaItem}>
                 <Link
                   href="/contact"
+                  prefetch={false}
                   className="inline-flex items-center justify-center gap-2 px-8 py-4 text-[#0F172A] text-sm font-semibold btn-secondary"
                 >
                   <MessageCircle size={18} />
