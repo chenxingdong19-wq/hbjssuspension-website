@@ -25,7 +25,7 @@
     "description": "Complete rear suspension components including control arms, trailing arms, and auxiliary arms.",
     "icon": "Link",
     "children": [
-      { "id": "rear-control-arm", "name": "Rear Control Arms", "slug": "rear-control-arm" },
+     
       { "id": "rear-trailing-arm", "name": "Rear Trailing Arms", "slug": "rear-trailing-arm" },
       { "id": "rear-auxiliary-arm", "name": "Rear Auxiliary Arms", "slug": "rear-auxiliary-arm" },
       { "id": "rear-upper-arm", "name": "Rear Upper Arms", "slug": "rear-upper-arm" }
@@ -40,7 +40,7 @@
     "children": [
       { "id": "suspension-large-bushing", "name": "Suspension Large Bushings", "slug": "suspension-large-bushing" },
       { "id": "suspension-small-bushing", "name": "Suspension Small Bushings", "slug": "suspension-small-bushing" },
-      { "id": "control-arm-bushing", "name": "Control Arm Bushings", "slug": "control-arm-bushing" },
+      { "id": "Rear Trailing Arm Bushing", "name": "Rear Trailing Arm Bushing", "slug": "Rear Trailing Arm Bushing" },
       { "id": "custom-size-bushing", "name": "Custom Size Bushings", "slug": "custom-size-bushing" }
     ]
   },
