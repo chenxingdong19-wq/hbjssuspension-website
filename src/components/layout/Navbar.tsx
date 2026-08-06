@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { getCategories, getCompany } from "@/lib/data";
+import { getCategories, getCompany, getProducts } from "@/lib/data";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -27,12 +27,25 @@ export default function Navbar() {
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const pathname = usePathname();
   const categories = getCategories();
+  const products = getProducts();
   const company = getCompany();
   const lastScrollY = useRef(0);
   const isAnimating = useRef(false);
   // Live ref of mobileOpen so the scroll handler can read it without stale closure
   const mobileOpenRef = useRef(false);
   const headerRef = useRef<HTMLDivElement>(null);
+
+  // Only surface categories that actually have products — prevents clicking an
+  // empty category (e.g. front-subframe / rear-suspension-parts with no data
+  // yet) from landing on a "No products found" empty page.
+  const categoriesWithProducts = categories.filter((cat) => {
+    if (cat.children.length > 0) {
+      return cat.children.some((sub) =>
+        products.some((p) => p.subcategorySlug === sub.slug)
+      );
+    }
+    return products.some((p) => p.categorySlug === cat.slug);
+  });
 
   // Keep ref in sync
   useEffect(() => {
@@ -160,7 +173,7 @@ export default function Navbar() {
                       >
                         All Products
                       </Link>
-                      {categories.map((cat) => (
+                      {categoriesWithProducts.map((cat) => (
                         <Link
                           key={cat.slug}
                           href={`/products?category=${cat.slug}`}
@@ -265,7 +278,7 @@ export default function Navbar() {
                           >
                             All Products
                           </Link>
-                          {categories.map((cat) => (
+                          {categoriesWithProducts.map((cat) => (
                             <Link
                               key={cat.slug}
                               href={`/products?category=${cat.slug}`}

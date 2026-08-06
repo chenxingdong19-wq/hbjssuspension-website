@@ -23,6 +23,20 @@ export default function ProductsContent({ products }: { products: Product[] }) {
 
   const categories = getCategories();
 
+  // Only show categories that actually have products — prevents clicking an
+  // empty category (e.g. front-subframe / rear-suspension-parts with no data
+  // yet) from landing on a "No products found" empty page.
+  const categoriesWithProducts = useMemo(() => {
+    return categories.filter((cat) => {
+      if (cat.children.length > 0) {
+        return cat.children.some((sub) =>
+          products.some((p) => p.subcategorySlug === sub.slug)
+        );
+      }
+      return products.some((p) => p.categorySlug === cat.slug);
+    });
+  }, [categories, products]);
+
   // URL param seeding
   useEffect(() => {
     const cat = searchParams.get("category");
@@ -156,7 +170,7 @@ export default function ProductsContent({ products }: { products: Product[] }) {
               All Products
             </button>
 
-            {categories.map((cat) => (
+            {categoriesWithProducts.map((cat) => (
               <div
                 key={cat.slug}
                 className="relative"
@@ -209,7 +223,7 @@ export default function ProductsContent({ products }: { products: Product[] }) {
               <span className="text-xs text-[#64748B]">Active filter:</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 border border-red-100 filter-badge text-xs font-medium text-accent">
                 {subcategoryFilter
-                  ? categories.flatMap((c) => c.children).find((s) => s.slug === subcategoryFilter)?.name
+                  ? categoriesWithProducts.flatMap((c) => c.children).find((s) => s.slug === subcategoryFilter)?.name
                   : activeCat?.name}
                 <button onClick={handleAllClick} className="hover:text-accent-hover transition-colors">
                   <X size={12} />
@@ -221,7 +235,7 @@ export default function ProductsContent({ products }: { products: Product[] }) {
 
         {/* ---- Mobile accordion ---- */}
         <div className="lg:hidden mb-10">
-          {categories.map((cat) => (
+          {categoriesWithProducts.map((cat) => (
             <div key={cat.slug} className="border-b border-gray-200">
               <button
                 onClick={() => setMobileExpanded(mobileExpanded === cat.slug ? null : cat.slug)}
