@@ -3,6 +3,9 @@ import { getProducts } from "@/lib/data";
 import { readProductInfo } from "@/lib/product-folder";
 import ProductsContent from "./ProductsContent";
 
+// Always render fresh — prevents stale cached HTML from appearing after updates.
+export const dynamic = "force-dynamic";
+
 export default async function ProductsPage() {
   const products = getProducts();
 
