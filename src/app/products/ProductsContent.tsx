@@ -238,7 +238,13 @@ export default function ProductsContent({ products }: { products: Product[] }) {
           {categoriesWithProducts.map((cat) => (
             <div key={cat.slug} className="border-b border-gray-200">
               <button
-                onClick={() => setMobileExpanded(mobileExpanded === cat.slug ? null : cat.slug)}
+                onClick={() =>
+                  // Leaf category (no children) → filter directly, same as desktop.
+                  // Category with children → toggle accordion expansion.
+                  cat.children.length > 0
+                    ? setMobileExpanded(mobileExpanded === cat.slug ? null : cat.slug)
+                    : handleCategoryClick(cat.slug)
+                }
                 className={`w-full flex items-center justify-between px-4 py-3.5 text-sm font-semibold transition-colors ${
                   categoryFilter === cat.slug ? "text-accent" : "text-[#475569] hover:text-[#0F172A]"
                 }`}

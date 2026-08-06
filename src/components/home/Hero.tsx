@@ -163,8 +163,7 @@ export default function Hero() {
             <motion.div
               variants={badgeVariant}
               initial="hidden"
-              whileInView="show"
-              viewport={{ once: false }}
+              animate="show"
               className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 border border-red-100 mb-8 backdrop-blur-sm pointer-events-auto"
             >
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
@@ -177,8 +176,7 @@ export default function Hero() {
             <motion.h1
               variants={titleVariant}
               initial="hidden"
-              whileInView="show"
-              viewport={{ once: false }}
+              animate="show"
               className="text-4xl sm:text-5xl lg:text-[4rem] font-extrabold tracking-[-0.02em] leading-[1.06] mb-6 bg-gradient-to-b from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-transparent"
             >
               {company.tagline}
@@ -188,8 +186,7 @@ export default function Hero() {
             <motion.p
               variants={descVariant}
               initial="hidden"
-              whileInView="show"
-              viewport={{ once: false }}
+              animate="show"
               className="text-base sm:text-lg text-slate-500 leading-relaxed mb-10 max-w-xl font-medium antialiased pointer-events-auto"
             >
               {company.description}
@@ -199,8 +196,7 @@ export default function Hero() {
             <motion.div
               variants={ctaContainer}
               initial="hidden"
-              whileInView="show"
-              viewport={{ once: false }}
+              animate="show"
               className="flex flex-col sm:flex-row gap-3.5 pointer-events-auto"
             >
               <motion.div variants={ctaItem}>
