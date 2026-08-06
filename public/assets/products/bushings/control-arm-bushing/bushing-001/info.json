@@ -1,11 +1,11 @@
 {
-  "oem": "54584-2S000",
-  "vehicle": "Hyundai/Kia Multi-Model",
+  "oem": "55274-D3000/F8000 55275-D3000/F8000",
+  "vehicle": "Hyundai KIA ",
   "material": "Natural Rubber with Steel Sleeve",
-  "surface": "Bonded Assembly",
+  "surface": "Chemlok",
   "process": "Rubber Molding, Steel Insert Bonding, Vulcanization",
   "packaging": "Kit packaging with individual compartments, 30 units per carton",
-  "description": "Complete control arm bushing kit manufactured from high-grade natural rubber with bonded steel sleeves. Designed for automotive suspension systems, it provides superior vibration dampening and noise isolation for enhanced ride comfort. Precision-engineered as a direct replacement component with consistent fit and reliable performance.",
+  "description": "Complete Rear Trailing Arm Bushing manufactured from high-grade natural rubber with bonded steel sleeves. Designed for automotive suspension systems, it provides superior vibration dampening and noise isolation for enhanced ride comfort. Precision-engineered as a direct replacement component with consistent fit and reliable performance.",
   "featured": false,
-  "displayName": "Control Arm Bushing Kit"
+  "displayName": "Rear Trailing Arm Bushing"
 }

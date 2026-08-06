@@ -1,11 +1,11 @@
 {
-  "oem": "54813-2S000",
-  "vehicle": "Universal Application",
-  "material": "Polyurethane",
-  "surface": "Molded Finish",
-  "process": "Polyurethane Injection Molding",
-  "packaging": "Pair packaging, 100 pairs per master carton",
-  "description": "Performance polyurethane stabilizer bar bushings designed for automotive suspension applications. Offering improved handling response and stability compared to standard rubber alternatives, these bushings deliver enhanced chassis control and ride quality. Available in multiple sizes for versatile fitment across vehicle platforms.",
+  "oem": "54551-2D000/2F000",
+  "vehicle": "Hyundai KIA",
+  "material": "Natural Rubber with Steel Sleeve",
+  "surface": "Chemlok",
+  "process": "Rubber Molding, Steel Insert Bonding, Vulcanization",
+  "packaging": "Kit packaging with individual compartments, 30 units per carton",
+  "description": "Complete control arm bushing kit manufactured from high-grade natural rubber with bonded steel sleeves. Designed for automotive suspension systems, it provides superior vibration dampening and noise isolation for enhanced ride comfort. Precision-engineered as a direct replacement component with consistent fit and reliable performance.",
   "featured": false,
-  "displayName": "Stabilizer Bar Bushing"
+  "displayName": "Small suspension bushing"
 }
