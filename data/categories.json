@@ -8,6 +8,14 @@
     "children": []
   },
   {
+    "id": "front-subframe",
+    "name": "Front Subframe",
+    "slug": "front-subframe",
+    "description": "Front subframes and suspension cradles engineered for precise chassis mounting and stability.",
+    "icon": "Frame",
+    "children": []
+  },
+  {
     "id": "stabilizer-links-ball-joints",
     "name": "Stabilizer Links & Ball Joints",
     "slug": "stabilizer-links-ball-joints",
