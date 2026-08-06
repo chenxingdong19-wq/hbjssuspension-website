@@ -24,10 +24,12 @@ export default function ProductsContent({ products }: { products: Product[] }) {
   const categories = getCategories();
 
   // Only show categories that actually have products — prevents clicking an
-  // empty category (e.g. front-subframe / rear-suspension-parts with no data
-  // yet) from landing on a "No products found" empty page.
+  // empty category (e.g. rear-suspension-parts with no data yet) from landing
+  // on a "No products found" empty page. front-subframe is intentionally kept
+  // as an empty placeholder category requested by the business.
   const categoriesWithProducts = useMemo(() => {
     return categories.filter((cat) => {
+      if (cat.slug === "front-subframe") return true;
       if (cat.children.length > 0) {
         return cat.children.some((sub) =>
           products.some((p) => p.subcategorySlug === sub.slug)
