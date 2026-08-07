@@ -9,6 +9,7 @@ const spring = { type: "spring", stiffness: 260, damping: 22, mass: 0.8 } as con
 
 export default function ContactFloat() {
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [pressed, setPressed] = useState<"chat" | "whatsapp" | null>(null);
   const [ripple, setRipple] = useState<{ id: number; x: number; y: number } | null>(null);
@@ -24,7 +25,16 @@ export default function ContactFloat() {
   const sx = useSpring(mx, { stiffness: 150, damping: 15 });
   const sy = useSpring(my, { stiffness: 150, damping: 15 });
 
-  // Animate in on mount
+  // Mobile detection: kill breathing/sheen on phones for scroll perf
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 600);
     return () => clearTimeout(t);
@@ -243,7 +253,7 @@ export default function ContactFloat() {
           pressed ? "scale-95" : "hover:scale-[1.05] active:scale-95"
         } ${scrolled ? "scale-[0.96]" : "scale-100"} transition-transform duration-300`}
         style={glassStyle}
-        animate={{
+        animate={isMobile ? { y: 0 } : {
           y: [0, -4, 0],
           boxShadow: [
             "inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(0,0,0,0.03), 0 4px 24px rgba(0,0,0,0.08)",
@@ -285,7 +295,7 @@ export default function ContactFloat() {
             style={{
               inset: "-100% 0 -100% 0",
               transform: "translateX(-100%)",
-              animation: expanded ? "none" : "contactSheen 3.8s ease-in-out infinite",
+              animation: expanded || isMobile ? "none" : "contactSheen 3.8s ease-in-out infinite",
               opacity: 0.35,
             }}
           />

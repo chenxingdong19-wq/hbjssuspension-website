@@ -86,19 +86,22 @@ export default function Hero() {
 
   return (
     <section ref={ref} className="relative min-h-screen flex items-start md:items-center overflow-hidden bg-ambient section-hero">
-      {/* Parallax ambient glow */}
-      <motion.div style={{ opacity: glowOpacity }} className="absolute inset-0 pointer-events-none" aria-hidden>
-        <motion.div
-          animate={{ x: [0, 24, 0], y: [0, -14, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-20 -right-20 w-[55%] h-[55%] rounded-full bg-gradient-to-tr from-indigo-200/30 via-purple-100/20 to-transparent blur-3xl"
-        />
-        <motion.div
-          animate={{ x: [0, -20, 0], y: [0, 12, 0] }}
-          transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-0 -left-24 w-[50%] h-[50%] rounded-full bg-gradient-to-br from-sky-200/25 via-blue-100/15 to-transparent blur-3xl"
-        />
-      </motion.div>
+      {/* Parallax ambient glow — desktop only. Skipped on mobile to avoid
+          infinite blur+transform repaints that hurt scroll smoothness. */}
+      {!isMobile && (
+        <motion.div style={{ opacity: glowOpacity }} className="absolute inset-0 pointer-events-none" aria-hidden>
+          <motion.div
+            animate={{ x: [0, 24, 0], y: [0, -14, 0] }}
+            transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -top-20 -right-20 w-[55%] h-[55%] rounded-full bg-gradient-to-tr from-indigo-200/30 via-purple-100/20 to-transparent blur-3xl"
+          />
+          <motion.div
+            animate={{ x: [0, -20, 0], y: [0, 12, 0] }}
+            transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-0 -left-24 w-[50%] h-[50%] rounded-full bg-gradient-to-br from-sky-200/25 via-blue-100/15 to-transparent blur-3xl"
+          />
+        </motion.div>
+      )}
 
       {/* Full-bleed visual layer — borderless */}
       <div className="absolute inset-0 z-0">
