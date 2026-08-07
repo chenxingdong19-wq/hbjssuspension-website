@@ -3,8 +3,11 @@
  * Pure front-end, no backend needed.
  */
 
+import companyData from "../../data/company.json";
+
 const WEB3FORMS_ACCESS_KEY = "1e8646a2-8536-4ea5-94ec-e0a3d85fbf2f";
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+const COMPANY_EMAIL = companyData.contact.email as string;
 
 export interface InquiryPayload {
   product: string;
@@ -34,7 +37,9 @@ async function postToWeb3Forms(fields: Record<string, unknown>, subject: string,
         access_key: WEB3FORMS_ACCESS_KEY,
         subject,
         from_name: fromName,
+        replyto: fields.email || COMPANY_EMAIL,
         ...fields,
+        email: fields.email || COMPANY_EMAIL,
       }),
     });
 
