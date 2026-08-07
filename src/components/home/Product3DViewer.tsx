@@ -192,9 +192,9 @@ export default function Product3DViewer() {
             <ViewerErrorBoundary fallback={null}>
               <div className="absolute inset-0 z-10 w-full h-full">
                 <Canvas
-                  dpr={[1, 1.75]}
+                  dpr={[0.8, 1.25]}
                   camera={{ position: [0, 0.8, 3.3], fov: 36 }}
-                  gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false, powerPreference: "high-performance" }}
+                  gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false, powerPreference: "low-power" }}
                   onCreated={({ scene, gl }) => {
                     // Higher-res environment map — crisp reflections on metal PBR parts
                     const pmrem = new PMREMGenerator(gl);
