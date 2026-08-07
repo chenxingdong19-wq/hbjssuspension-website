@@ -4,7 +4,7 @@ import CompanyIntro from "./CompanyIntro";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn about Hebei Jingshun Auto Parts Co., Ltd. - a professional automotive suspension manufacturer with 12+ years of experience serving global markets.",
+    "Hebei Jingshun Auto Parts: 12+ years manufacturing automotive suspension parts with OEM/ODM for global importers & distributors.",
 };
 
 export default function AboutPage() {
