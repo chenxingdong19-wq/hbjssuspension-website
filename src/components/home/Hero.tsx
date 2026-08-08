@@ -180,7 +180,7 @@ export default function Hero() {
               variants={titleVariant}
               initial="hidden"
               animate="show"
-              className="text-4xl sm:text-5xl lg:text-[4rem] font-extrabold tracking-[-0.02em] leading-[1.06] mb-6 bg-gradient-to-b from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-transparent"
+              className="text-[1.7rem] sm:text-5xl lg:text-[4rem] font-extrabold tracking-[-0.02em] leading-[1.15] md:leading-[1.06] mb-4 md:mb-6 bg-gradient-to-b from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-transparent"
             >
               {company.tagline}
             </motion.h1>
@@ -190,7 +190,7 @@ export default function Hero() {
               variants={descVariant}
               initial="hidden"
               animate="show"
-              className="text-base sm:text-lg text-slate-500 leading-relaxed mb-10 max-w-xl font-medium antialiased pointer-events-auto"
+              className="text-sm sm:text-lg text-slate-500 leading-relaxed mb-6 md:mb-10 max-w-xl font-medium antialiased pointer-events-auto line-clamp-3 md:line-clamp-none"
             >
               {company.description}
             </motion.p>

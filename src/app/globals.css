@@ -376,4 +376,14 @@ input::placeholder,textarea::placeholder { color: #94A3B8 !important; }
   .product-card-shine .light-sweep {
     animation: none !important;
   }
+
+  /* Mobile factory marquee — pure CSS infinite horizontal scroll (GPU transform) */
+  @keyframes factoryMarqueeX {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .factory-marquee-track {
+    animation: factoryMarqueeX 26s linear infinite;
+    will-change: transform;
+  }
 }
