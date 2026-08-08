@@ -386,4 +386,8 @@ input::placeholder,textarea::placeholder { color: #94A3B8 !important; }
     animation: factoryMarqueeX 26s linear infinite;
     will-change: transform;
   }
+  .factory-marquee-track::-webkit-scrollbar { display: none; }
+  .factory-touch-zone.is-interacting .factory-marquee-track {
+    animation-play-state: paused;
+  }
 }
