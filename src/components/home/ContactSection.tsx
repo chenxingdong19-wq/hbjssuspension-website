@@ -2,11 +2,14 @@
 
 import { motion } from "framer-motion";
 import { getCompany } from "@/lib/data";
-import { MapPin, Mail, Phone, Clock, User } from "lucide-react";
+import { MapPin, Mail, Phone, Clock, User, MessageCircle, MessageSquare, Globe, Share2 } from "lucide-react";
 import InquiryForm from "@/components/ui/InquiryForm";
 
 export default function ContactSection() {
   const company = getCompany();
+  const social = company.social;
+  const waLink = `https://wa.me/${social.whatsapp.replace(/\D/g, "")}`;
+
   return (
     <section id="contact" className="py-20 border-t border-gray-200 section-alt">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +36,19 @@ export default function ContactSection() {
                 })}
               </div>
             </div>
+
+            {/* Quick Connect - social from company.json (hidden if empty) */}
+            <div className="glass-card p-6">
+              <h3 className="text-lg font-semibold text-[#0F172A] mb-6">Quick Connect</h3>
+              <div className="space-y-5">
+                {social.whatsapp && (<div className="flex items-start gap-3"><MessageCircle size={18} className="text-green-500 mt-0.5 shrink-0" /><div><div className="text-xs font-medium text-[#64748B] mb-0.5">WhatsApp</div><a href={waLink} target="_blank" rel="noopener noreferrer" className="text-sm text-[#475569] hover:text-accent transition-colors">{social.whatsapp}</a></div></div>)}
+                {social.wechat && (<div className="flex items-start gap-3"><MessageSquare size={18} className="text-green-600 mt-0.5 shrink-0" /><div><div className="text-xs font-medium text-[#64748B] mb-0.5">WeChat</div><div className="text-sm text-[#475569]">{social.wechat}</div></div></div>)}
+                {social.facebook && (<div className="flex items-start gap-3"><Globe size={18} className="text-blue-600 mt-0.5 shrink-0" /><div><div className="text-xs font-medium text-[#64748B] mb-0.5">Facebook</div><a href={social.facebook} target="_blank" rel="noopener noreferrer" className="text-sm text-[#475569] hover:text-accent transition-colors">{social.facebook}</a></div></div>)}
+                {social.linkedin && (<div className="flex items-start gap-3"><Share2 size={18} className="text-sky-700 mt-0.5 shrink-0" /><div><div className="text-xs font-medium text-[#64748B] mb-0.5">LinkedIn</div><a href={social.linkedin} target="_blank" rel="noopener noreferrer" className="text-sm text-[#475569] hover:text-accent transition-colors">{social.linkedin}</a></div></div>)}
+              </div>
+            </div>
           </motion.div>
+
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="lg:col-span-3"><InquiryForm /></motion.div>
         </div>
       </div>
